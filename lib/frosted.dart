@@ -47,51 +47,154 @@ class _FrostedContainerState extends State<FrostedContainer>
           ),
         ),
         // Frosted glass container with animated gradient
-        Center(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20.0),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-              child: AnimatedBuilder(
-                animation: _controller,
-                builder: (context, child) {
-                  return Container(
-                    width: 300.0,
-                    height: 200.0,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.blueAccent.withOpacity(0.4),
-                          Colors.purpleAccent.withOpacity(0.4),
-                          Colors.blueAccent.withOpacity(0.4),
-                        ],
-                        stops: [0.0, 0.5, 1.0],
-                        begin: _animation.value,
-                        end:
-                            Alignment(-_animation.value.x, -_animation.value.y),
-                      ),
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(20.0),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
-                        width: 1.5,
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Animated Frosted Glass',
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.none,
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20.0),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                  child: AnimatedBuilder(
+                    animation: _controller,
+                    builder: (context, child) {
+                      return Container(
+                        width: double.maxFinite,
+                        height: 200.0,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.blueAccent.withOpacity(0.4),
+                              Colors.purpleAccent.withOpacity(0.4),
+                              Colors.blueAccent.withOpacity(0.4),
+                            ],
+                            stops: [0.0, 0.5, 1.0],
+                            begin: _animation.value,
+                            end: Alignment(
+                                -_animation.value.x, -_animation.value.y),
+                          ),
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(20.0),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.3),
+                            width: 1.5,
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                },
+                        child: Center(
+                          child: Text(
+                            'Online',
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.none,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
-            ),
+              SizedBox(
+                height: 20,
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20.0),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                  child: AnimatedBuilder(
+                    animation: _controller,
+                    builder: (context, child) {
+                      return Container(
+                        width: double.maxFinite,
+                        height: 200.0,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.blueAccent.withOpacity(0.4),
+                              Colors.purpleAccent.withOpacity(0.4),
+                              Colors.blueAccent.withOpacity(0.4),
+                            ],
+                            stops: [0.0, 0.5, 1.0],
+                            begin: _animation.value,
+                            end: Alignment(
+                                -_animation.value.x, -_animation.value.y),
+                          ),
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(20.0),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.3),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Cash',
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.none,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20.0),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                  child: AnimatedBuilder(
+                    animation: _controller,
+                    builder: (context, child) {
+                      return Container(
+                        width: double.maxFinite,
+                        height: 200.0,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.blueAccent.withOpacity(0.4),
+                              Colors.purpleAccent.withOpacity(0.4),
+                              Colors.blueAccent.withOpacity(0.4),
+                            ],
+                            stops: [0.0, 0.5, 1.0],
+                            begin: _animation.value,
+                            end: Alignment(
+                                -_animation.value.x, -_animation.value.y),
+                          ),
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(20.0),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.3),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Collect',
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.none,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
