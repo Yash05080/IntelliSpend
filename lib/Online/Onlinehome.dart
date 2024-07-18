@@ -14,6 +14,25 @@ class _OnlineHomeState extends State<OnlineHome> {
       appBar: AppBar(
         title: Text("Online"),
       ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              padding: EdgeInsets.all(16),
+              height: 55,
+              width: double.maxFinite,
+              color: Colors.grey,
+              child: Text("total online expense"),
+            ),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Container()
+        ],
+      ),
     );
   }
 }

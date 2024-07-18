@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:keep_the_count/Online/Onlinehome.dart';
 
 class FrostedContainer extends StatefulWidget {
   @override
@@ -60,36 +61,44 @@ class _FrostedContainerState extends State<FrostedContainer>
                   child: AnimatedBuilder(
                     animation: _controller,
                     builder: (context, child) {
-                      return Container(
-                        width: double.maxFinite,
-                        height: 200.0,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.blueAccent.withOpacity(0.4),
-                              Colors.purpleAccent.withOpacity(0.4),
-                              Colors.blueAccent.withOpacity(0.4),
-                            ],
-                            stops: [0.0, 0.5, 1.0],
-                            begin: _animation.value,
-                            end: Alignment(
-                                -_animation.value.x, -_animation.value.y),
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OnlineHome()));
+                        },
+                        child: Container(
+                          width: double.maxFinite,
+                          height: 200.0,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.blueAccent.withOpacity(0.4),
+                                Colors.purpleAccent.withOpacity(0.4),
+                                Colors.blueAccent.withOpacity(0.4),
+                              ],
+                              stops: [0.0, 0.5, 1.0],
+                              begin: _animation.value,
+                              end: Alignment(
+                                  -_animation.value.x, -_animation.value.y),
+                            ),
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(20.0),
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.3),
+                              width: 1.5,
+                            ),
                           ),
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(20.0),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.3),
-                            width: 1.5,
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Online',
-                            style: TextStyle(
-                              fontSize: 24.0,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.none,
+                          child: Center(
+                            child: Text(
+                              'Online',
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.none,
+                              ),
                             ),
                           ),
                         ),
