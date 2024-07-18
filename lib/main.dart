@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:keep_the_count/Database/expense_database.dart';
 import 'package:keep_the_count/frosted.dart';
 import 'package:keep_the_count/homepage.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  //initialize db
+  await ExpenseDatabase.initialize();
+
   runApp(const MyApp());
 }
 
