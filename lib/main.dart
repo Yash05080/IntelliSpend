@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:keep_the_count/Database/expense_database.dart';
 import 'package:keep_the_count/frosted.dart';
 import 'package:keep_the_count/homepage.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -9,7 +10,10 @@ void main() async {
   //initialize db
   await ExpenseDatabase.initialize();
 
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => ExpenseDatabase(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -24,7 +28,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: FrostedContainer(),
+      home: MyHomePage(),
     );
   }
 }
