@@ -1,7 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:keep_the_count/Online/Onlinehome.dart';
+import 'package:keep_the_count/Database/expense_database.dart';
+import 'package:keep_the_count/helper/stringtoint.dart';
+import 'package:keep_the_count/model/expense.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -38,8 +41,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               actions: [
                 //cancel button
+                _cancelButton(),
 
                 //save button
+                _saveButton()
               ],
             ));
   }
@@ -51,6 +56,50 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: openNewExpenseBox,
         child: Icon(Icons.add),
       ),
+    );
+  }
+
+  //CANCEL button
+
+  Widget _cancelButton() {
+    return MaterialButton(
+      onPressed: () {
+        //pop box
+        Navigator.pop(context);
+
+        //clear controller
+        nameController.clear();
+        amountController.clear();
+      },
+      child: Text("Cancel"),
+    );
+  }
+
+  // SAVE button
+  Widget _saveButton() {
+    return MaterialButton(
+      onPressed: () async {
+        //only save if bopth name and amount is filled
+        if (nameController.text.isNotEmpty &&
+            amountController.text.isNotEmpty) {
+          //pop box
+          Navigator.pop(context);
+
+          //create new expense
+          Expense newExpense = Expense(
+              name: nameController.text,
+              amount: convertStringToDouble(amountController.text),
+              date: DateTime.now());
+
+          //save in db
+          await context.read<ExpenseDatabase>().createNewExpense(newExpense);
+
+          //clear controllers
+          nameController.clear();
+          amountController.clear();
+        }
+      },
+      child: Text("Save"),
     );
   }
 }
