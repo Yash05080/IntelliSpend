@@ -2,7 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:keep_the_count/Database/expense_database.dart';
-import 'package:keep_the_count/helper/stringtoint.dart';
+import 'package:keep_the_count/componants/my_list_tile.dart';
+import 'package:keep_the_count/helper/helper_functions.dart';
 import 'package:keep_the_count/model/expense.dart';
 import 'package:provider/provider.dart';
 
@@ -70,9 +71,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   //get individual expense
                   Expense individualExpense = value.allExpense[index];
                   //return Listtile UI
-                  return ListTile(
-                    title: Text(individualExpense.name),
-                    trailing: Text(individualExpense.amount.toString()),
+                  return MyListTile(
+                    name: individualExpense.name,
+                    amount: formatAmount(individualExpense.amount),
+                    Day: individualExpense.date.day.toString(),
+                    month: individualExpense.date.month.toString(),
+                    year: individualExpense.date.year.toString(),
                   );
                 })));
   }
