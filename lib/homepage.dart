@@ -57,6 +57,57 @@ class _MyHomePageState extends State<MyHomePage> {
             ));
   }
 
+  //open edit box
+  void openEditBox(Expense expense) {
+// load previous values into the textfeild
+    String existingName = expense.name;
+    String existingAmount = expense.amount.toString();
+
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Edit expense?"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // user input -> expense name
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(hintText: existingName),
+                  ),
+                  // user input -> expense amount
+                  TextField(
+                    controller: amountController,
+                    decoration: InputDecoration(hintText: existingAmount),
+                  ),
+                ],
+              ),
+              actions: [
+                //cancel button
+                _cancelButton(),
+
+                //save button
+                _editExpenseButton(expense)
+              ],
+            ));
+  }
+
+  //open delete box
+  void openDeleteBox(Expense expense) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("delete expense?"),
+              actions: [
+                //cancel button
+                _cancelButton(),
+
+                //save button
+                _deleteExpenseButton(expense.id)
+              ],
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ExpenseDatabase>(
@@ -77,6 +128,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     Day: individualExpense.date.day.toString(),
                     month: individualExpense.date.month.toString(),
                     year: individualExpense.date.year.toString(),
+                    onEditPressed: (context) => openEditBox(individualExpense),
+                    onDeletePressed: (context) =>
+                        openDeleteBox(individualExpense),
                   );
                 })));
   }
@@ -122,6 +176,52 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       },
       child: Text("Save"),
+    );
+  }
+
+  // EDIT button
+  Widget _editExpenseButton(Expense expense) {
+    return MaterialButton(
+      onPressed: () async {
+        //save as long as atleast one textfeild has been changed
+        if (nameController.text.isNotEmpty ||
+            amountController.text.isNotEmpty) {
+          //pop box
+          Navigator.pop(context);
+          //create a new updated expenase
+          Expense updatedExpense = Expense(
+              name: nameController.text.isNotEmpty
+                  ? nameController.text
+                  : expense.name,
+              amount: amountController.text.isNotEmpty
+                  ? convertStringToDouble(amountController.text)
+                  : expense.amount,
+              date: DateTime.now());
+
+          //old expense id
+          int existingid = expense.id;
+
+          //save to db
+          await context
+              .read<ExpenseDatabase>()
+              .updateExpense(existingid, updatedExpense);
+        }
+      },
+      child: Text("save"),
+    );
+  }
+
+  //DELETE button
+  Widget _deleteExpenseButton(int id) {
+    return MaterialButton(
+      onPressed: () async {
+        //pop box
+        Navigator.pop(context);
+
+        //delete the expense
+        await context.read<ExpenseDatabase>().deleteExpense(id);
+      },
+      child: Text("Delete"),
     );
   }
 }
