@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:finance_manager_app/pages/Home/veiws/componants/balancecard.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -77,143 +78,134 @@ class _MainScreenState extends State<MainScreen> {
             const SizedBox(
               height: 20,
             ),
-            Container(
-              height: MediaQuery.of(context).size.width / 2,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Theme.of(context).colorScheme.tertiary,
-                    Theme.of(context).colorScheme.secondary,
-                    Theme.of(context).colorScheme.primary,
-                  ],
-                  transform: const GradientRotation(pi / 8),
+
+            //  Balance Card
+
+            const BalanceCard(),
+
+            SizedBox(
+              height: 40,
+            ),
+
+            // Transactions
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Transactions",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color:
-                        Theme.of(context).colorScheme.tertiary.withOpacity(0.5),
-                    offset: const Offset(0, 8),
-                    blurRadius: 10,
-                    spreadRadius: 0,
-                  ),
-                  BoxShadow(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .secondary
-                        .withOpacity(0.3),
-                    offset: const Offset(0, 12),
-                    blurRadius: 14,
-                    spreadRadius: 0,
-                  ),
-                  BoxShadow(
-                    color:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                    offset: const Offset(0, 16),
-                    blurRadius: 18,
-                    spreadRadius: 0,
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const Text(
-                    "Total Balance",
+
+                // veiw all function
+
+                GestureDetector(
+                  onTap: () {},
+                  child: Text(
+                    "View All",
                     style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.blueGrey[400],
+                    ),
                   ),
-                  // SizedBox(height: 10,),
-                  const Text(
-                    "₹ 5000.00",
-                    style: TextStyle(
+                )
+              ],
+            ),
+
+            SizedBox(
+              height: 20,
+            ),
+
+            //transactions list
+
+            Expanded(
+              child: ListView.builder(
+                itemCount: 8,
+                itemBuilder: (context, int i) {
+                  return Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 25.0, left: 5, right: 5),
+                    child: Container(
+                      decoration: BoxDecoration(
                         color: Colors.white,
-                        fontSize: 44,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  // SizedBox(height: 10,),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              height: 26,
-                              width: 26,
-                              decoration: const BoxDecoration(
-                                color: Colors.white38,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.arrow_downward,
-                                  size: 18,
-                                  color: Colors.green,
+                            // row for category name and icon
+
+                            Row(
+                              children: [
+                                Container(
+                                  height: 60,
+                                  width: 60,
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.apple,
+                                      color: Colors.white,
+                                      size: 30,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "Category",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground),
+                                ),
+                              ],
                             ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+
+                            //Column for amount and day
+
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  "Income",
-                                  style: TextStyle(color: Colors.black),
+                                  "₹ 500.00",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 18,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground),
                                 ),
-                                Text("₹8000",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600)),
+                                Text(
+                                  "Today",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.blueGrey[300],
+                                  ),
+                                ),
                               ],
-                            ),
+                            )
                           ],
                         ),
-                        Row(
-                          children: [
-                            Container(
-                              height: 26,
-                              width: 26,
-                              decoration: const BoxDecoration(
-                                color: Colors.white38,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.arrow_upward_outlined,
-                                  size: 18,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Expenses",
-                                    style: TextStyle(color: Colors.black)),
-                                Text("₹3000",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600)),
-                              ],
-                            ),
-                          ],
-                        )
-                      ],
+                      ),
                     ),
-                  )
-                ],
+                  );
+                },
               ),
-            ),
+            )
           ],
         ),
       ),

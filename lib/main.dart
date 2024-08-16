@@ -16,8 +16,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'finance tracker',
       theme: ThemeData(
-        
-        
         colorScheme: ColorScheme.light(
           background: Color.fromARGB(255, 227, 239, 237),
           onBackground: HexColor("08100c"), //obsidian
@@ -25,13 +23,10 @@ class MyApp extends StatelessWidget {
           secondary: HexColor("009a6e"), //dark green
           tertiary: HexColor("e8e300"), //yellow
           outline: HexColor("767f7d"), //dark grey
-          
         ),
-        
         useMaterial3: true,
       ),
       home: const MyHomePage(),
     );
   }
 }
-
