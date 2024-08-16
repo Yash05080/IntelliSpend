@@ -37,7 +37,7 @@ class _MainScreenState extends State<MainScreen> {
                             fontSize: 25),
                       )),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 8,
                     ),
                     Column(
@@ -74,59 +74,64 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Container(
               height: MediaQuery.of(context).size.width / 2,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Theme.of(context).colorScheme.tertiary,
-                      Theme.of(context).colorScheme.secondary,
-                      Theme.of(context).colorScheme.primary,
-                    ],
-                    transform: GradientRotation(pi / 8),
+                gradient: LinearGradient(
+                  colors: [
+                    Theme.of(context).colorScheme.tertiary,
+                    Theme.of(context).colorScheme.secondary,
+                    Theme.of(context).colorScheme.primary,
+                  ],
+                  transform: const GradientRotation(pi / 8),
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color:
+                        Theme.of(context).colorScheme.tertiary.withOpacity(0.5),
+                    offset: const Offset(0, 8),
+                    blurRadius: 10,
+                    spreadRadius: 0,
                   ),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-      BoxShadow(
-        color: Theme.of(context).colorScheme.tertiary.withOpacity(0.5),
-        offset: Offset(0, 8),
-        blurRadius: 10,
-        spreadRadius: 0,
-      ),
-      BoxShadow(
-        color: Theme.of(context).colorScheme.secondary.withOpacity(0.3),
-        offset: Offset(0, 12),
-        blurRadius: 14,
-        spreadRadius: 0,
-      ),
-      BoxShadow(
-        color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-        offset: Offset(0, 16),
-        blurRadius: 18,
-        spreadRadius: 0,
-      ),
-    ],
+                  BoxShadow(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .secondary
+                        .withOpacity(0.3),
+                    offset: const Offset(0, 12),
+                    blurRadius: 14,
+                    spreadRadius: 0,
                   ),
+                  BoxShadow(
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                    offset: const Offset(0, 16),
+                    blurRadius: 18,
+                    spreadRadius: 0,
+                  ),
+                ],
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(
+                  const Text(
                     "Total Balance",
                     style: TextStyle(
                         color: Colors.white,
-                        fontSize: 14,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold),
                   ),
                   // SizedBox(height: 10,),
-                  Text(
+                  const Text(
                     "₹ 5000.00",
                     style: TextStyle(
                         color: Colors.white,
-                        fontSize: 34,
+                        fontSize: 44,
                         fontWeight: FontWeight.bold),
                   ),
                   // SizedBox(height: 10,),
@@ -138,24 +143,34 @@ class _MainScreenState extends State<MainScreen> {
                         Row(
                           children: [
                             Container(
-                              height: 22,
-                              width: 22,
-                              decoration: BoxDecoration(
+                              height: 26,
+                              width: 26,
+                              decoration: const BoxDecoration(
                                 color: Colors.white38,
                                 shape: BoxShape.circle,
                               ),
-                              child: Center(
+                              child: const Center(
                                 child: Icon(
                                   Icons.arrow_downward,
-                                  size: 14,
+                                  size: 18,
+                                  color: Colors.green,
                                 ),
                               ),
                             ),
-                            SizedBox(width: 8,),
-                            Column(
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Income"),
-                                Text("₹8000"),
+                                Text(
+                                  "Income",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                Text("₹8000",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600)),
                               ],
                             ),
                           ],
@@ -163,25 +178,32 @@ class _MainScreenState extends State<MainScreen> {
                         Row(
                           children: [
                             Container(
-                              height: 22,
-                              width: 22,
-                              decoration: BoxDecoration(
+                              height: 26,
+                              width: 26,
+                              decoration: const BoxDecoration(
                                 color: Colors.white38,
                                 shape: BoxShape.circle,
                               ),
-                              child: Center(
+                              child: const Center(
                                 child: Icon(
                                   Icons.arrow_upward_outlined,
-                                  size: 14,
-                                  
+                                  size: 18,
+                                  color: Colors.red,
                                 ),
                               ),
                             ),
-                            SizedBox(width: 8,),
-                            Column(
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Expenses"),
-                                Text("₹3000"),
+                                Text("Expenses",
+                                    style: TextStyle(color: Colors.black)),
+                                Text("₹3000",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600)),
                               ],
                             ),
                           ],
