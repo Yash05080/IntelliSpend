@@ -24,14 +24,24 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: Colors.white,
           //showSelectedLabels: false,
           showUnselectedLabels: false,
-          unselectedItemColor: HexColor("b3eda9"),
-          selectedItemColor: HexColor("105d5e"),
+          unselectedItemColor: Theme.of(context).colorScheme.secondary,
+          selectedItemColor:Theme.of(context).colorScheme.primary,
           selectedIconTheme: IconThemeData(size: 25),
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                size: 35,
+              icon: Hero(
+                tag: "home",
+                child: Icon(
+                  Icons.home_outlined,
+                  size: 35,
+                ),
+              ),
+              activeIcon: Hero(
+                tag: "home",
+                child: Icon(
+                  Icons.home,
+                  size: 30,
+                ),
               ),
               label: "Home",
             ),

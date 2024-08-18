@@ -1,7 +1,7 @@
-import 'dart:math';
-
+import 'package:finance_manager_app/data/mydata.dart';
 import 'package:finance_manager_app/pages/Home/veiws/componants/balancecard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class MainScreen extends StatefulWidget {
@@ -29,7 +29,7 @@ class _MainScreenState extends State<MainScreen> {
                       height: 60,
                       width: 60,
                       decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: HexColor("105d5e")),
+                          shape: BoxShape.circle, color: HexColor("32E0C4")),
                       child: Center(
                           child: Text(
                         "Y",
@@ -83,7 +83,7 @@ class _MainScreenState extends State<MainScreen> {
 
             const BalanceCard(),
 
-            SizedBox(
+            const SizedBox(
               height: 40,
             ),
 
@@ -117,7 +117,7 @@ class _MainScreenState extends State<MainScreen> {
               ],
             ),
 
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
 
@@ -125,7 +125,7 @@ class _MainScreenState extends State<MainScreen> {
 
             Expanded(
               child: ListView.builder(
-                itemCount: 8,
+                itemCount: transactionsData.length,
                 itemBuilder: (context, int i) {
                   return Padding(
                     padding:
@@ -144,26 +144,25 @@ class _MainScreenState extends State<MainScreen> {
 
                             Row(
                               children: [
-                                Container(
-                                  height: 60,
-                                  width: 60,
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.apple,
-                                      color: Colors.white,
-                                      size: 30,
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [Container(
+                                    height: 60,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                      color: transactionsData[i]['color'],
+                                      shape: BoxShape.circle,
                                     ),
+                                    
                                   ),
+                                  Center(child:transactionsData[i]['icon'])
+                                  ]
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 10,
                                 ),
                                 Text(
-                                  "Category",
+                                  transactionsData[i]['name'],
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 16,
@@ -180,7 +179,7 @@ class _MainScreenState extends State<MainScreen> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  "₹ 500.00",
+                                  transactionsData[i]['totalamount'],
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 18,
@@ -189,7 +188,7 @@ class _MainScreenState extends State<MainScreen> {
                                           .onBackground),
                                 ),
                                 Text(
-                                  "Today",
+                                  transactionsData[i]['date'],
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,

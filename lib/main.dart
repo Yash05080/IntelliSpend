@@ -19,9 +19,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.light(
           background: Color.fromARGB(255, 227, 239, 237),
           onBackground: HexColor("08100c"), //obsidian
-          primary: HexColor("b3eda9"), //light green
-          secondary: HexColor("009a6e"), //dark green
-          tertiary: HexColor("e8e300"), //yellow
+          primary: HexColor("0D7377"), //deep teal
+          secondary: HexColor("32E0C4"), //aqua mint
+          tertiary: HexColor("393E46"), //charcoal grey
           outline: HexColor("767f7d"), //dark grey
         ),
         useMaterial3: true,
