@@ -1,3 +1,4 @@
+import 'package:finance_manager_app/pages/Stats/chart.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,11 @@ class _StatsPageState extends State<StatsPage> {
             Container(
               height: MediaQuery.of(context).size.width,
               width: MediaQuery.of(context).size.width,
-              child: BarChart(BarChartData()),
+              decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(20)),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(12, 20, 12, 12),
+                child: MyChart(),
+              ),
             )
           ],
         ),
