@@ -11,8 +11,6 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
   // Initial selected category
   String selectedCategory = 'Food';
 
-  
-
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
@@ -29,8 +27,17 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
             children: [
               // The small colored dot before the name
               data['icon'],
-              SizedBox(width: 10,),
-              Text(data['name'],style: TextStyle(color: Theme.of(context).colorScheme.onBackground,fontSize: 22,fontWeight: FontWeight.bold,fontFamily: 'cool'),),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                data['name'],
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'cool'),
+              ),
             ],
           ),
         );

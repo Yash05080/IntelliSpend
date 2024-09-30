@@ -79,17 +79,17 @@ class _MainScreenState extends State<MainScreen> {
             const SizedBox(
               height: 20,
             ),
-    
+
             //  Balance Card
-    
+
             const BalanceCard(),
-    
+
             const SizedBox(
               height: 40,
             ),
-    
+
             // Transactions
-    
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -101,9 +101,9 @@ class _MainScreenState extends State<MainScreen> {
                     color: Theme.of(context).colorScheme.onBackground,
                   ),
                 ),
-    
+
                 // veiw all function
-    
+
                 GestureDetector(
                   onTap: () {
                     Navigator.push(context,
@@ -120,13 +120,13 @@ class _MainScreenState extends State<MainScreen> {
                 )
               ],
             ),
-    
+
             const SizedBox(
               height: 20,
             ),
-    
+
             //transactions list
-    
+
             Expanded(
               child: ListView.builder(
                 itemCount: transactionsData.length,
@@ -145,7 +145,7 @@ class _MainScreenState extends State<MainScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             // row for category name and icon
-    
+
                             Row(
                               children: [
                                 Stack(alignment: Alignment.center, children: [
@@ -173,9 +173,9 @@ class _MainScreenState extends State<MainScreen> {
                                 ),
                               ],
                             ),
-    
+
                             //Column for amount and day
-    
+
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
