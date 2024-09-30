@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:finance_manager_app/pages/Home/veiws/main_screen.dart';
 import 'package:finance_manager_app/pages/Stats/StatsPage.dart';
+import 'package:finance_manager_app/pages/add%20expense/veiws/add_expense.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -34,8 +35,10 @@ class _MyHomePageState extends State<MyHomePage> {
           showUnselectedLabels: false,
           unselectedItemColor: Theme.of(context).colorScheme.secondary,
           selectedItemColor: Theme.of(context).colorScheme.primary,
-          selectedIconTheme: const IconThemeData(size: 30), // Size of the selected icon
-          unselectedIconTheme: const IconThemeData(size: 25), // Size of the unselected icon
+          selectedIconTheme:
+              const IconThemeData(size: 30), // Size of the selected icon
+          unselectedIconTheme:
+              const IconThemeData(size: 25), // Size of the unselected icon
           items: const [
             BottomNavigationBarItem(
               icon: Icon(
@@ -53,10 +56,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 Icons.bar_chart,
                 size: 35,
               ),
-              activeIcon:Icon(
+              activeIcon: Icon(
                 Icons.bar_chart,
                 size: 30,
-              ), 
+              ),
               label: "Statistics",
             ),
           ],
@@ -64,7 +67,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AddExpense()));
+        },
         elevation: 10,
         focusElevation: 0,
         shape: CircleBorder(),

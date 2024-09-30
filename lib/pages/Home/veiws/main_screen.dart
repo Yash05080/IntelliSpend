@@ -1,5 +1,6 @@
 import 'package:finance_manager_app/data/mydata.dart';
 import 'package:finance_manager_app/pages/Home/veiws/componants/balancecard.dart';
+import 'package:finance_manager_app/pages/all%20Expenses/allExpense.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -78,17 +79,17 @@ class _MainScreenState extends State<MainScreen> {
             const SizedBox(
               height: 20,
             ),
-
+    
             //  Balance Card
-
+    
             const BalanceCard(),
-
+    
             const SizedBox(
               height: 40,
             ),
-
+    
             // Transactions
-
+    
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -100,11 +101,14 @@ class _MainScreenState extends State<MainScreen> {
                     color: Theme.of(context).colorScheme.onBackground,
                   ),
                 ),
-
+    
                 // veiw all function
-
+    
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => AllExpense()));
+                  },
                   child: Text(
                     "View All",
                     style: TextStyle(
@@ -116,13 +120,13 @@ class _MainScreenState extends State<MainScreen> {
                 )
               ],
             ),
-
+    
             const SizedBox(
               height: 20,
             ),
-
+    
             //transactions list
-
+    
             Expanded(
               child: ListView.builder(
                 itemCount: transactionsData.length,
@@ -141,23 +145,20 @@ class _MainScreenState extends State<MainScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             // row for category name and icon
-
+    
                             Row(
                               children: [
-                                Stack(
-                                  alignment: Alignment.center,
-                                  children: [Container(
+                                Stack(alignment: Alignment.center, children: [
+                                  Container(
                                     height: 60,
                                     width: 60,
                                     decoration: BoxDecoration(
                                       color: transactionsData[i]['color'],
                                       shape: BoxShape.circle,
                                     ),
-                                    
                                   ),
-                                  Center(child:transactionsData[i]['icon'])
-                                  ]
-                                ),
+                                  Center(child: transactionsData[i]['icon'])
+                                ]),
                                 const SizedBox(
                                   width: 10,
                                 ),
@@ -172,9 +173,9 @@ class _MainScreenState extends State<MainScreen> {
                                 ),
                               ],
                             ),
-
+    
                             //Column for amount and day
-
+    
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [

@@ -93,3 +93,82 @@ final List<Map<String, dynamic>> transactionsData = [
     'date': 'Today',
   }
 ];
+
+// CateGories
+
+final List<Map<String, dynamic>> DataCategories = [
+  {
+    'icon': FaIcon(
+      FontAwesomeIcons.burger,
+      color: Colors.red, // Icon color matches the category color
+      size: 30,
+    ),
+    'name': 'Food',
+    'color': Colors.red, // Suitable for food, like a red apple or burger
+  },
+  {
+    'icon': FaIcon(
+      FontAwesomeIcons.bagShopping,
+      color: Colors.pink, // Icon color matches the category color
+      size: 30,
+    ),
+    'name': 'Shopping',
+    'color': Colors.pink, // Pink is often associated with shopping or fashion
+  },
+  {
+    'icon': FaIcon(
+      FontAwesomeIcons.ticket,
+      color: Colors.blue, // Icon color matches the category color
+      size: 30,
+    ),
+    'name': 'Entertainment',
+    'color': Colors.blue, // Blue can represent fun and entertainment
+  },
+  {
+    'icon': FaIcon(
+      FontAwesomeIcons.planeDeparture,
+      color: Colors.orange, // Icon color matches the category color
+      size: 30,
+    ),
+    'name': 'Travel',
+    'color': Colors.orange, // Orange evokes a sense of adventure and travel
+  },
+  {
+    'icon': FaIcon(
+      FontAwesomeIcons.kitMedical,
+      color: Colors.green, // Icon color matches the category color
+      size: 30,
+    ),
+    'name': 'Medical',
+    'color': Colors.green, // Green represents health and wellness
+  },
+  {
+    'icon': FaIcon(
+      FontAwesomeIcons.phone,
+      color: Colors.teal, // Icon color matches the category color
+      size: 30,
+    ),
+    'name': 'Recharge',
+    'color':
+        Colors.teal, // Teal is a fresh color, good for utilities like recharge
+  },
+  {
+    'icon': FaIcon(
+      FontAwesomeIcons.house,
+      color: Colors.brown, // Icon color matches the category color
+      size: 30,
+    ),
+    'name': 'Rent',
+    'color':
+        Colors.brown, // Brown represents stability, fitting for rent or home
+  },
+  {
+    'icon': FaIcon(
+      FontAwesomeIcons.cashRegister,
+      color: Colors.grey, // Icon color matches the category color
+      size: 30,
+    ),
+    'name': 'Others',
+    'color': Colors.grey, // Grey for miscellaneous or other expenses
+  }
+];

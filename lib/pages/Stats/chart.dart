@@ -23,15 +23,14 @@ class _MyChartState extends State<MyChart> {
       BarChartRodData(
           toY: y,
           gradient: LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.tertiary,
-            Theme.of(context).colorScheme.secondary,
-            Theme.of(context).colorScheme.primary,
-            
-          ],
-          transform: const GradientRotation(pi/ 36),
-        ),
-          width: 10,
+            colors: [
+              Theme.of(context).colorScheme.tertiary,
+              Theme.of(context).colorScheme.secondary,
+              Theme.of(context).colorScheme.primary,
+            ],
+            transform: const GradientRotation(pi / 36),
+          ),
+          width: 12,
           backDrawRodData: BackgroundBarChartRodData(
               color: Colors.grey.shade300, show: true, toY: 5))
     ]);
@@ -77,7 +76,7 @@ class _MyChartState extends State<MyChart> {
         ),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
-              showTitles: true, reservedSize: 38, getTitlesWidget: leftTitles),
+              showTitles: true, reservedSize: 50, getTitlesWidget: leftTitles),
         ),
       ),
       borderData: FlBorderData(show: false),
