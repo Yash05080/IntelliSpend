@@ -1,14 +1,18 @@
+
+
 import 'dart:math';
 
 import 'package:finance_manager_app/pages/Home/veiws/main_screen.dart';
-import 'package:finance_manager_app/pages/Stats/StatsPage.dart';
+import 'package:finance_manager_app/pages/Stats/statspage.dart';
 import 'package:finance_manager_app/pages/add%20expense/veiws/add_expense.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:hexcolor/hexcolor.dart';
+
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _MyHomePageState createState() => _MyHomePageState();
 }
 
@@ -19,7 +23,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: ClipRRect(
-        borderRadius: BorderRadius.vertical(
+        borderRadius: const BorderRadius.vertical(
           top: Radius.circular(50),
         ),
         child: BottomNavigationBar(
@@ -69,11 +73,11 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddExpense()));
+              context, MaterialPageRoute(builder: (context) => const AddExpense()));
         },
         elevation: 10,
         focusElevation: 0,
-        shape: CircleBorder(),
+        shape: const CircleBorder(),
         child: Container(
           height: 100,
           width: 100,
@@ -85,16 +89,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 Theme.of(context).colorScheme.secondary,
                 Theme.of(context).colorScheme.tertiary,
               ],
-              transform: GradientRotation(pi / 4),
+              transform: const GradientRotation(pi / 4),
             ),
           ),
-          child: Icon(
+          child: const Icon(
             Icons.add,
             size: 32,
           ),
         ),
       ),
-      body: index == 0 ? MainScreen() : StatsPage(),
+      body: index == 0 ? const MainScreen() : const StatsPage(),
     );
   }
 }

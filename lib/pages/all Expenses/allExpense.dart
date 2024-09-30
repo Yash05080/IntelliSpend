@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 
 class AllExpense extends StatelessWidget {
@@ -7,7 +8,7 @@ class AllExpense extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: SafeArea(child: Column(children: [Text("all expenses")],)),
+      body: const SafeArea(child: Column(children: [Text("all expenses")],)),
     );
   }
 }

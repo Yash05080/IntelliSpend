@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // For date formatting
 
 class DatePickerWidget extends StatefulWidget {
+  const DatePickerWidget({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _DatePickerWidgetState createState() => _DatePickerWidgetState();
 }
 
@@ -34,7 +37,7 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
     return GestureDetector(
       onTap: () => _pickDate(context),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         decoration: BoxDecoration(
           color: Colors.grey[200],
           borderRadius: BorderRadius.circular(8),
@@ -42,10 +45,10 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
             BoxShadow(
               color: Colors.grey.shade500,
               blurRadius: 10,
-              offset: Offset(3, 3),
+              offset: const Offset(3, 3),
             ),
-            BoxShadow(
-              color: const Color.fromARGB(255, 0, 0, 0),
+            const BoxShadow(
+              color: Color.fromARGB(255, 0, 0, 0),
               blurRadius: 10,
               offset: Offset(-3, -3),
             ),
@@ -56,10 +59,10 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
           children: [
             Text(
               '${getFormattedDate()}',
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
             ),
-            SizedBox(width: 10,),
-            Icon(Icons.calendar_today),
+            const SizedBox(width: 10,),
+            const Icon(Icons.calendar_today),
           ],
         ),
       ),

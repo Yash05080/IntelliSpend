@@ -2,7 +2,7 @@ import 'package:finance_manager_app/data/mydata.dart';
 import 'package:finance_manager_app/pages/Home/veiws/componants/balancecard.dart';
 import 'package:finance_manager_app/pages/all%20Expenses/allExpense.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:hexcolor/hexcolor.dart';
 
 class MainScreen extends StatefulWidget {
@@ -57,8 +57,7 @@ class _MainScreenState extends State<MainScreen> {
                           style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color:
-                                  Theme.of(context).colorScheme.onBackground),
+                              color: Theme.of(context).colorScheme.onSurface),
                         )
                       ],
                     ),
@@ -70,7 +69,7 @@ class _MainScreenState extends State<MainScreen> {
                     onPressed: () {},
                     icon: Icon(
                       Icons.settings,
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -98,7 +97,7 @@ class _MainScreenState extends State<MainScreen> {
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
 
@@ -106,8 +105,10 @@ class _MainScreenState extends State<MainScreen> {
 
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => AllExpense()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AllExpense()));
                   },
                   child: Text(
                     "View All",
@@ -169,7 +170,7 @@ class _MainScreenState extends State<MainScreen> {
                                       fontSize: 16,
                                       color: Theme.of(context)
                                           .colorScheme
-                                          .onBackground),
+                                          .onSurface),
                                 ),
                               ],
                             ),
@@ -186,7 +187,7 @@ class _MainScreenState extends State<MainScreen> {
                                       fontSize: 18,
                                       color: Theme.of(context)
                                           .colorScheme
-                                          .onBackground),
+                                          .onSurface),
                                 ),
                                 Text(
                                   transactionsData[i]['date'],

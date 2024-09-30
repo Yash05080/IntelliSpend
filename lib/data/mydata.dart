@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 final List<Map<String, dynamic>> transactionsData = [
   {
-    'icon': FaIcon(
+    'icon': const FaIcon(
       FontAwesomeIcons.burger,
       color: Colors.white,
       size: 30,
@@ -14,7 +14,7 @@ final List<Map<String, dynamic>> transactionsData = [
     'date': 'Today',
   },
   {
-    'icon': FaIcon(
+    'icon': const FaIcon(
       FontAwesomeIcons.bagShopping,
       color: Colors.white,
       size: 30,
@@ -25,7 +25,7 @@ final List<Map<String, dynamic>> transactionsData = [
     'date': 'Today',
   },
   {
-    'icon': FaIcon(
+    'icon': const FaIcon(
       FontAwesomeIcons.ticket,
       color: Colors.white,
       size: 30,
@@ -36,7 +36,7 @@ final List<Map<String, dynamic>> transactionsData = [
     'date': 'Today',
   },
   {
-    'icon': FaIcon(
+    'icon': const FaIcon(
       FontAwesomeIcons.planeDeparture,
       color: Colors.white,
       size: 30,
@@ -47,7 +47,7 @@ final List<Map<String, dynamic>> transactionsData = [
     'date': 'Yesterday',
   },
   {
-    'icon': FaIcon(
+    'icon': const FaIcon(
       FontAwesomeIcons.kitMedical,
       color: Colors.white,
       size: 30,
@@ -58,7 +58,7 @@ final List<Map<String, dynamic>> transactionsData = [
     'date': 'Yesterday',
   },
   {
-    'icon': FaIcon(
+    'icon': const FaIcon(
       FontAwesomeIcons.phone,
       color: Colors.white,
       size: 30,
@@ -70,7 +70,7 @@ final List<Map<String, dynamic>> transactionsData = [
     'date': 'Yesterday',
   },
   {
-    'icon': FaIcon(
+    'icon': const FaIcon(
       FontAwesomeIcons.house,
       color: Colors.white,
       size: 30,
@@ -82,7 +82,7 @@ final List<Map<String, dynamic>> transactionsData = [
     'date': '3 Days ago',
   },
   {
-    'icon': FaIcon(
+    'icon': const FaIcon(
       FontAwesomeIcons.cashRegister,
       color: Colors.white,
       size: 30,
@@ -98,7 +98,7 @@ final List<Map<String, dynamic>> transactionsData = [
 
 final List<Map<String, dynamic>> DataCategories = [
   {
-    'icon': FaIcon(
+    'icon': const FaIcon(
       FontAwesomeIcons.burger,
       color: Colors.red, // Icon color matches the category color
       size: 30,
@@ -107,7 +107,7 @@ final List<Map<String, dynamic>> DataCategories = [
     'color': Colors.red, // Suitable for food, like a red apple or burger
   },
   {
-    'icon': FaIcon(
+    'icon': const FaIcon(
       FontAwesomeIcons.bagShopping,
       color: Colors.pink, // Icon color matches the category color
       size: 30,
@@ -116,7 +116,7 @@ final List<Map<String, dynamic>> DataCategories = [
     'color': Colors.pink, // Pink is often associated with shopping or fashion
   },
   {
-    'icon': FaIcon(
+    'icon': const FaIcon(
       FontAwesomeIcons.ticket,
       color: Colors.blue, // Icon color matches the category color
       size: 30,
@@ -125,7 +125,7 @@ final List<Map<String, dynamic>> DataCategories = [
     'color': Colors.blue, // Blue can represent fun and entertainment
   },
   {
-    'icon': FaIcon(
+    'icon': const FaIcon(
       FontAwesomeIcons.planeDeparture,
       color: Colors.orange, // Icon color matches the category color
       size: 30,
@@ -134,7 +134,7 @@ final List<Map<String, dynamic>> DataCategories = [
     'color': Colors.orange, // Orange evokes a sense of adventure and travel
   },
   {
-    'icon': FaIcon(
+    'icon': const FaIcon(
       FontAwesomeIcons.kitMedical,
       color: Colors.green, // Icon color matches the category color
       size: 30,
@@ -143,7 +143,7 @@ final List<Map<String, dynamic>> DataCategories = [
     'color': Colors.green, // Green represents health and wellness
   },
   {
-    'icon': FaIcon(
+    'icon': const FaIcon(
       FontAwesomeIcons.phone,
       color: Colors.teal, // Icon color matches the category color
       size: 30,
@@ -153,7 +153,7 @@ final List<Map<String, dynamic>> DataCategories = [
         Colors.teal, // Teal is a fresh color, good for utilities like recharge
   },
   {
-    'icon': FaIcon(
+    'icon': const FaIcon(
       FontAwesomeIcons.house,
       color: Colors.brown, // Icon color matches the category color
       size: 30,
@@ -163,7 +163,7 @@ final List<Map<String, dynamic>> DataCategories = [
         Colors.brown, // Brown represents stability, fitting for rent or home
   },
   {
-    'icon': FaIcon(
+    'icon': const FaIcon(
       FontAwesomeIcons.cashRegister,
       color: Colors.grey, // Icon color matches the category color
       size: 30,

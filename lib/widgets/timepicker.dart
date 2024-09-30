@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // For time formatting
 
 class TimePickerWidget extends StatefulWidget {
+  const TimePickerWidget({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _TimePickerWidgetState createState() => _TimePickerWidgetState();
 }
 
@@ -34,7 +37,7 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
     return GestureDetector(
       onTap: () => _pickTime(context),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         decoration: BoxDecoration(
           color: Colors.grey[200],
           borderRadius: BorderRadius.circular(8),
@@ -42,10 +45,10 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
             BoxShadow(
               color: Colors.grey.shade500,
               blurRadius: 10,
-              offset: Offset(3, 3),
+              offset: const Offset(3, 3),
             ),
-            BoxShadow(
-              color: const Color.fromARGB(255, 0, 0, 0),
+            const BoxShadow(
+              color: Color.fromARGB(255, 0, 0, 0),
               blurRadius: 10,
               offset: Offset(-3, -3),
             ),
@@ -55,11 +58,11 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '${getFormattedTime()}',
-              style: TextStyle(fontSize: 18),
+              getFormattedTime(),
+              style: const TextStyle(fontSize: 18),
             ),
-            SizedBox(width: 10,),
-            Icon(Icons.access_time),
+            const SizedBox(width: 10,),
+            const Icon(Icons.access_time),
           ],
         ),
       ),

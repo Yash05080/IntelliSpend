@@ -1,9 +1,11 @@
 import 'package:finance_manager_app/data/mydata.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CategoryDropdown extends StatefulWidget {
+  const CategoryDropdown({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _CategoryDropdownState createState() => _CategoryDropdownState();
 }
 
@@ -27,13 +29,13 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
             children: [
               // The small colored dot before the name
               data['icon'],
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Text(
                 data['name'],
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'cool'),
@@ -42,7 +44,7 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
           ),
         );
       }).toList(),
-      hint: Text('Select Category'),
+      hint: const Text('Select Category'),
     );
   }
 }

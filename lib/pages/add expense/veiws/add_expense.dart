@@ -1,22 +1,20 @@
-import 'dart:ffi';
-import 'dart:math';
-
 import 'package:finance_manager_app/pages/add%20expense/veiws/dropdownmenu.dart';
 import 'package:finance_manager_app/widgets/datepicker.dart';
 import 'package:finance_manager_app/widgets/timepicker.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:hexcolor/hexcolor.dart';
 
 class AddExpense extends StatefulWidget {
-  AddExpense({super.key});
+  const AddExpense({super.key});
 
   @override
   State<AddExpense> createState() => _AddExpenseState();
 }
 
 class _AddExpenseState extends State<AddExpense> {
+  // ignore: non_constant_identifier_names
   TextEditingController Amount = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -25,7 +23,7 @@ class _AddExpenseState extends State<AddExpense> {
       child: Scaffold(
         body: Stack(
           children: [
-            Container(
+            SizedBox(
               height: double.maxFinite,
               width: double.maxFinite,
               child: Image.asset(
@@ -45,7 +43,7 @@ class _AddExpenseState extends State<AddExpense> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.cancel_outlined,
                           size: 30,
                         )),
@@ -59,13 +57,13 @@ class _AddExpenseState extends State<AddExpense> {
                       color: Colors.white, // Text color
                       shadows: [
                         Shadow(
-                          offset: Offset(4, 4), // Dark shadow offset
+                          offset: const Offset(4, 4), // Dark shadow offset
                           blurRadius: 10,
                           color: Colors.black
                               .withOpacity(0.4), // Dark shadow color
                         ),
                         Shadow(
-                          offset: Offset(-1, -2), // Light shadow offset
+                          offset: const Offset(-1, -2), // Light shadow offset
                           blurRadius: 10,
                           color: Colors.white
                               .withOpacity(0.8), // Light shadow color
@@ -74,7 +72,7 @@ class _AddExpenseState extends State<AddExpense> {
                     ),
                   ),
 
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
 
@@ -92,17 +90,17 @@ class _AddExpenseState extends State<AddExpense> {
                               HexColor("32E0C4"), // Light Teal
                               HexColor("393E46"), // Dark Gray
                             ],
-                          ).createShader(Rect.fromLTWH(0, 0, 300, 125)),
+                          ).createShader(const Rect.fromLTWH(0, 0, 300, 125)),
                         shadows: [
                           // Dark shadow for the bottom-right
                           Shadow(
-                            offset: Offset(4, 4), // Shadow offset
+                            offset: const Offset(4, 4), // Shadow offset
                             blurRadius: 10, // Blur radius
                             color: Colors.black.withOpacity(0.3), // Dark shadow
                           ),
                           // Light shadow for the top-left
                           Shadow(
-                            offset: Offset(-4, -4), // Light shadow offset
+                            offset: const Offset(-4, -4), // Light shadow offset
                             blurRadius: 10, // Blur radius for softness
                             color:
                                 Colors.white.withOpacity(0.8), // Light shadow
@@ -121,7 +119,7 @@ class _AddExpenseState extends State<AddExpense> {
                     ),
                   ),
 
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
 
@@ -137,13 +135,13 @@ class _AddExpenseState extends State<AddExpense> {
                         // Dark shadow for the bottom-right
                         BoxShadow(
                           color: Colors.grey[300]!,
-                          offset: Offset(4, 4), // Dark shadow position
+                          offset: const Offset(4, 4), // Dark shadow position
                           blurRadius: 10,
                           spreadRadius: 1,
                         ),
                         // Light shadow for the top-left
-                        BoxShadow(
-                          color: const Color.fromARGB(255, 0, 0, 0),
+                        const BoxShadow(
+                          color: Color.fromARGB(255, 0, 0, 0),
                           offset: Offset(-4, -4), // Light shadow position
                           blurRadius: 10,
                           spreadRadius: 1,
@@ -154,11 +152,11 @@ class _AddExpenseState extends State<AddExpense> {
                               .colorScheme
                               .primary), // Primary color border
                     ),
-                    child: Center(
+                    child: const Center(
                         child:
                             CategoryDropdown()), // Centering the dropdown inside
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
                   //description
 
@@ -172,13 +170,13 @@ class _AddExpenseState extends State<AddExpense> {
                         // Dark shadow for bottom-right
                         BoxShadow(
                           color: Colors.grey[300]!,
-                          offset: Offset(4, 4), // Position of dark shadow
+                          offset: const Offset(4, 4), // Position of dark shadow
                           blurRadius: 15,
                           spreadRadius: 1,
                         ),
                         // Light shadow for top-left
-                        BoxShadow(
-                          color: const Color.fromARGB(255, 0, 0, 0),
+                        const BoxShadow(
+                          color: Color.fromARGB(255, 0, 0, 0),
                           offset: Offset(-4, -4), // Position of light shadow
                           blurRadius: 15,
                           spreadRadius: 1,
@@ -189,7 +187,7 @@ class _AddExpenseState extends State<AddExpense> {
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 22,
-                          color: Theme.of(context).colorScheme.onBackground),
+                          color: Theme.of(context).colorScheme.onSurface),
                       decoration: InputDecoration(
                         hintText: "Note",
                         hintStyle: TextStyle(
@@ -219,16 +217,16 @@ class _AddExpenseState extends State<AddExpense> {
                     ),
                   ),
 
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [DatePickerWidget(), TimePickerWidget()],
+                    children: [const DatePickerWidget(), TimePickerWidget()],
                   ),
 
-                  SizedBox(
+                  const SizedBox(
                     height: 40,
                   ),
 
@@ -246,10 +244,10 @@ class _AddExpenseState extends State<AddExpense> {
                         decoration: BoxDecoration(
                           color: Colors.grey[300], // Base color for Neomorphism
                           borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
+                          boxShadow: const [
                             // Dark shadow for bottom-right
                             BoxShadow(
-                              color: const Color.fromARGB(255, 38, 38, 38)!,
+                              color: Color.fromARGB(255, 38, 38, 38),
                               offset: Offset(4, 4),
                               blurRadius: 15,
                               spreadRadius: 5,
@@ -276,12 +274,12 @@ class _AddExpenseState extends State<AddExpense> {
                                     HexColor("32E0C4"), // Light Teal
                                     HexColor("393E46"), // Dark Gray
                                   ],
-                                ).createShader(Rect.fromLTWH(
+                                ).createShader(const Rect.fromLTWH(
                                     0, 0, 250, 35)), // Gradient size
                               shadows: [
                                 // Slight shadow to enhance text pop
                                 Shadow(
-                                  offset: Offset(2, 2),
+                                  offset: const Offset(2, 2),
                                   blurRadius: 5,
                                   color: Colors.black.withOpacity(0.2),
                                 ),

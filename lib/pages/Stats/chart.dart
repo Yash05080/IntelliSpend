@@ -64,10 +64,10 @@ class _MyChartState extends State<MyChart> {
     return BarChartData(
       titlesData: FlTitlesData(
         show: true,
-        rightTitles: AxisTitles(
+        rightTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        topTitles: AxisTitles(
+        topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
         bottomTitles: AxisTitles(
@@ -80,7 +80,7 @@ class _MyChartState extends State<MyChart> {
         ),
       ),
       borderData: FlBorderData(show: false),
-      gridData: FlGridData(show: false),
+      gridData: const FlGridData(show: false),
       barGroups: showingGroups(),
     );
   }
@@ -92,32 +92,32 @@ class _MyChartState extends State<MyChart> {
 
     switch (value.toInt()) {
       case 0:
-        text = Text("01", style: style);
+        text = const Text("01", style: style);
         break;
       case 1:
-        text = Text("02", style: style);
+        text = const Text("02", style: style);
         break;
       case 2:
-        text = Text("03", style: style);
+        text = const Text("03", style: style);
         break;
       case 3:
-        text = Text("04", style: style);
+        text = const Text("04", style: style);
         break;
       case 4:
-        text = Text("05", style: style);
+        text = const Text("05", style: style);
         break;
       case 5:
-        text = Text("06", style: style);
+        text = const Text("06", style: style);
         break;
       case 6:
-        text = Text("07", style: style);
+        text = const Text("07", style: style);
         break;
       case 7:
-        text = Text("08", style: style);
+        text = const Text("08", style: style);
         break;
 
       default:
-        text = Text(
+        text = const Text(
           " ",
           style: style,
         );

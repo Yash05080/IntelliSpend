@@ -17,8 +17,9 @@ class MyApp extends StatelessWidget {
       title: 'finance tracker',
       theme: ThemeData(
         colorScheme: ColorScheme.light(
-          background: Color.fromARGB(255, 227, 239, 237),
-          onBackground: HexColor("08100c"), //obsidian
+          // ignore: deprecated_member_use
+          background: const Color.fromARGB(255, 227, 239, 237),
+          onSurface: HexColor("08100c"), //obsidian
           primary: HexColor("0D7377"), //deep teal
           secondary: HexColor("32E0C4"), //aqua mint
           tertiary: HexColor("393E46"), //charcoal grey

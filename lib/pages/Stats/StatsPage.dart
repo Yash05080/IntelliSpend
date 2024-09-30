@@ -1,5 +1,5 @@
 import 'package:finance_manager_app/pages/Stats/chart.dart';
-import 'package:fl_chart/fl_chart.dart';
+
 import 'package:flutter/material.dart';
 
 class StatsPage extends StatefulWidget {
@@ -23,9 +23,9 @@ class _StatsPageState extends State<StatsPage> {
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onBackground),
+                  color: Theme.of(context).colorScheme.onSurface),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Container(
@@ -33,8 +33,8 @@ class _StatsPageState extends State<StatsPage> {
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(20)),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(12, 30, 12, 12),
+              child: const Padding(
+                padding: EdgeInsets.fromLTRB(12, 30, 12, 12),
                 child: MyChart(),
               ),
             )
