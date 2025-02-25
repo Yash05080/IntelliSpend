@@ -82,7 +82,9 @@ class _MyChartState extends State<MyChart> {
       borderData: FlBorderData(show: false),
       gridData: const FlGridData(show: false),
       barGroups: showingGroups(),
+      
     );
+    
   }
 
   Widget getTitle(double value, TitleMeta meta) {

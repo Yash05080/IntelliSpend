@@ -39,7 +39,7 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: Theme.of(context).colorScheme.background,
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(

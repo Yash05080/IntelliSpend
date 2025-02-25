@@ -17,6 +17,7 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
   Widget build(BuildContext context) {
     return DropdownButton<String>(
       value: selectedCategory,
+      dropdownColor: Theme.of(context).colorScheme.background,
       onChanged: (String? newValue) {
         setState(() {
           selectedCategory = newValue!;

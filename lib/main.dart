@@ -18,12 +18,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.light(
           // ignore: deprecated_member_use
-          background: const Color.fromARGB(255, 227, 239, 237),
-          onSurface: HexColor("08100c"), //obsidian
-          primary: HexColor("0D7377"), //deep teal
-          secondary: HexColor("32E0C4"), //aqua mint
-          tertiary: HexColor("393E46"), //charcoal grey
-          outline: HexColor("767f7d"), //dark grey
+          background: HexColor("191d2d"),
+          onSurface: HexColor("FFFFFF"), //text
+          primary: HexColor("F2C341"), //deep teal
+          secondary: HexColor("f1a410"), //aqua mint
+          tertiary: HexColor("f3696e"), //charcoal grey
+          outline: HexColor("f1a410"), //subtext
         ),
         useMaterial3: true,
       ),

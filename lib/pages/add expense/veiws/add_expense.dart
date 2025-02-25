@@ -26,9 +26,8 @@ class _AddExpenseState extends State<AddExpense> {
             SizedBox(
               height: double.maxFinite,
               width: double.maxFinite,
-              child: Image.asset(
-                "assets/images/bg1.png",
-                fit: BoxFit.fill,
+              child: Container(
+                color: HexColor("34394b"),
               ),
             ),
             SafeArea(
@@ -54,7 +53,8 @@ class _AddExpenseState extends State<AddExpense> {
                       fontSize: 45,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'cool',
-                      color: Colors.white, // Text color
+                      color:
+                          Theme.of(context).colorScheme.primary, // Text color
                       shadows: [
                         Shadow(
                           offset: const Offset(4, 4), // Dark shadow offset
@@ -63,11 +63,10 @@ class _AddExpenseState extends State<AddExpense> {
                               .withOpacity(0.4), // Dark shadow color
                         ),
                         Shadow(
-                          offset: const Offset(-1, -2), // Light shadow offset
-                          blurRadius: 10,
-                          color: Colors.white
-                              .withOpacity(0.8), // Light shadow color
-                        ),
+                            offset: const Offset(-1, -2), // Light shadow offset
+                            blurRadius: 10,
+                            color: HexColor("000000") // Light shadow color
+                            ),
                       ],
                     ),
                   ),
@@ -86,9 +85,9 @@ class _AddExpenseState extends State<AddExpense> {
                         foreground: Paint()
                           ..shader = LinearGradient(
                             colors: <Color>[
-                              HexColor("0D7377"), // Dark Teal
-                              HexColor("32E0C4"), // Light Teal
-                              HexColor("393E46"), // Dark Gray
+                              HexColor("F2C341"),
+                              HexColor("f1a410"),
+                              HexColor("f3696e"),
                             ],
                           ).createShader(const Rect.fromLTWH(0, 0, 300, 125)),
                         shadows: [
@@ -128,13 +127,12 @@ class _AddExpenseState extends State<AddExpense> {
                   Container(
                     width: 250,
                     decoration: BoxDecoration(
-                      color: Colors.grey[
-                          300], // A neutral background color to enhance Neomorphism
+                      color: Theme.of(context).colorScheme.background,
                       borderRadius: BorderRadius.circular(12), // Rounded edges
                       boxShadow: [
                         // Dark shadow for the bottom-right
                         BoxShadow(
-                          color: Colors.grey[300]!,
+                          color: Theme.of(context).colorScheme.background,
                           offset: const Offset(4, 4), // Dark shadow position
                           blurRadius: 10,
                           spreadRadius: 1,
@@ -163,13 +161,12 @@ class _AddExpenseState extends State<AddExpense> {
                   Container(
                     width: double.maxFinite,
                     decoration: BoxDecoration(
-                      color: Colors.grey[
-                          300], // Neutral background color for Neomorphism
+                      color: Theme.of(context).colorScheme.background,
                       borderRadius: BorderRadius.circular(12), // Rounded edges
                       boxShadow: [
                         // Dark shadow for bottom-right
                         BoxShadow(
-                          color: Colors.grey[300]!,
+                          color: Theme.of(context).colorScheme.background,
                           offset: const Offset(4, 4), // Position of dark shadow
                           blurRadius: 15,
                           spreadRadius: 1,
@@ -242,7 +239,7 @@ class _AddExpenseState extends State<AddExpense> {
                         height: 80,
                         //padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                         decoration: BoxDecoration(
-                          color: Colors.grey[300], // Base color for Neomorphism
+                          color: Theme.of(context).colorScheme.background,
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: const [
                             // Dark shadow for bottom-right
@@ -254,7 +251,7 @@ class _AddExpenseState extends State<AddExpense> {
                             ),
                             // Light shadow for top-left
                             BoxShadow(
-                              color: Colors.white,
+                              color: Color.fromARGB(255, 111, 117, 144),
                               offset: Offset(-4, -4),
                               blurRadius: 15,
                               spreadRadius: 5,
@@ -270,9 +267,9 @@ class _AddExpenseState extends State<AddExpense> {
                               foreground: Paint()
                                 ..shader = LinearGradient(
                                   colors: <Color>[
-                                    HexColor("0D7377"), // Dark Teal
-                                    HexColor("32E0C4"), // Light Teal
-                                    HexColor("393E46"), // Dark Gray
+                                    HexColor("F2C341"),
+                                    HexColor("f1a410"),
+                                    HexColor("f3696e"),
                                   ],
                                 ).createShader(const Rect.fromLTWH(
                                     0, 0, 250, 35)), // Gradient size

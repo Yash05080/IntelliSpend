@@ -30,13 +30,14 @@ class _MainScreenState extends State<MainScreen> {
                       height: 60,
                       width: 60,
                       decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: HexColor("32E0C4")),
+                          shape: BoxShape.circle, color: HexColor("F2C341")),
                       child: Center(
                           child: Text(
                         "Y",
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.tertiary,
-                            fontSize: 25),
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold),
                       )),
                     ),
                     const SizedBox(
@@ -137,7 +138,7 @@ class _MainScreenState extends State<MainScreen> {
                         const EdgeInsets.only(bottom: 25.0, left: 5, right: 5),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: HexColor("34394b"),
                         borderRadius: BorderRadius.circular(18),
                       ),
                       child: Padding(

@@ -6,6 +6,7 @@ import 'package:finance_manager_app/pages/Home/veiws/main_screen.dart';
 import 'package:finance_manager_app/pages/Stats/statspage.dart';
 import 'package:finance_manager_app/pages/add%20expense/veiws/add_expense.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 
 class MyHomePage extends StatefulWidget {
@@ -34,7 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
             });
           },
           elevation: 5,
-          backgroundColor: Colors.white,
+          backgroundColor: HexColor("34394b"),
           showSelectedLabels: true,
           showUnselectedLabels: false,
           unselectedItemColor: Theme.of(context).colorScheme.secondary,
@@ -98,6 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
+      backgroundColor: HexColor("191d2d"),
       body: index == 0 ? const MainScreen() : const StatsPage(),
     );
   }
