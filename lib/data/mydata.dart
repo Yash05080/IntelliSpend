@@ -143,6 +143,15 @@ final List<Map<String, dynamic>> DataCategories = [
   },
   {
     'icon': const FaIcon(
+      FontAwesomeIcons.car,
+      color: Colors.white, // Icon color matches the category color
+      size: 30,
+    ),
+    'name': 'Automobile',
+    'color': Colors.blueGrey, // Grey for miscellaneous or other expenses
+  },
+  {
+    'icon': const FaIcon(
       FontAwesomeIcons.cashRegister,
       color: Colors.white, // Icon color matches the category color
       size: 30,
@@ -150,15 +159,6 @@ final List<Map<String, dynamic>> DataCategories = [
     'name': 'Others',
     'color': Colors.grey, // Grey for miscellaneous or other expenses
   },
-  {
-    'icon': const FaIcon(
-      FontAwesomeIcons.car,
-      color: Colors.white, // Icon color matches the category color
-      size: 30,
-    ),
-    'name': 'Automobile',
-    'color': Colors.blueGrey, // Grey for miscellaneous or other expenses
-  }
 ];
 
 Map<String, dynamic> getCategoryDetails(String category) {

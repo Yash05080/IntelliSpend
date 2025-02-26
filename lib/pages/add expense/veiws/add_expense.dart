@@ -24,10 +24,12 @@ class _AddExpenseState extends State<AddExpense> {
         body: Stack(
           children: [
             SizedBox(
-              height: double.maxFinite,
-              width: double.maxFinite,
-              child: Image.asset('assets')
-            ),
+                height: double.maxFinite,
+                width: double.maxFinite,
+                child: Image.asset(
+                  'assets/backgrounds/bg.jpg',
+                  fit: BoxFit.fill,
+                )),
             SafeArea(
                 child: Padding(
               padding: const EdgeInsets.only(left: 18.0, right: 18),
@@ -51,8 +53,8 @@ class _AddExpenseState extends State<AddExpense> {
                       fontSize: 45,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'cool',
-                      color:
-                          Theme.of(context).colorScheme.primary, // Text color
+                      color: Colors.white,
+                      //Theme.of(context).colorScheme.primary, // Text color
                       shadows: [
                         Shadow(
                           offset: const Offset(4, 4), // Dark shadow offset
@@ -63,7 +65,7 @@ class _AddExpenseState extends State<AddExpense> {
                         Shadow(
                             offset: const Offset(-1, -2), // Light shadow offset
                             blurRadius: 10,
-                            color: HexColor("000000") // Light shadow color
+                            color: HexColor("ffffff") // Light shadow color
                             ),
                       ],
                     ),

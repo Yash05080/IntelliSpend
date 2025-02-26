@@ -130,7 +130,6 @@ class _MainScreenState extends State<MainScreen> {
             //transactions list
 
             Expanded(
-                child: Expanded(
               child: ListView.builder(
                 itemCount: transactionsData.length,
                 itemBuilder: (context, int i) {
@@ -204,7 +203,7 @@ class _MainScreenState extends State<MainScreen> {
                   );
                 },
               ),
-            ))
+            )
           ],
         ),
       ),

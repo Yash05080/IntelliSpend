@@ -31,12 +31,12 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
               // The small colored dot before the name
               data['icon'],
               const SizedBox(
-                width: 10,
+                width: 12,
               ),
               Text(
                 data['name'],
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
+                    color: data['color'],
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'cool'),
