@@ -3,104 +3,83 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 final List<Map<String, dynamic>> transactionsData = [
   {
-    'icon': const FaIcon(
-      FontAwesomeIcons.burger,
-      color: Colors.white,
-      size: 30,
-    ),
-    'name': 'Food',
-    'color': Colors.red, // Suitable for food, like a red apple or burger
-    'totalamount': '₹400.00',
+    'name': 'Ramen',
+    'totalamount': '₹250.00',
     'date': 'Today',
+    'description': 'Delicious ramen at a Japanese restaurant',
+    'category': 'Food',
   },
   {
-    'icon': const FaIcon(
-      FontAwesomeIcons.bagShopping,
-      color: Colors.white,
-      size: 30,
-    ),
-    'name': 'Shopping',
-    'color': Colors.pink, // Pink is often associated with shopping or fashion
-    'totalamount': '₹2560.00',
+    'name': 'New Phone',
+    'totalamount': '₹45,000.00',
     'date': 'Today',
+    'description': 'Bought a brand-new smartphone',
+    'category': 'Shopping',
   },
   {
-    'icon': const FaIcon(
-      FontAwesomeIcons.ticket,
-      color: Colors.white,
-      size: 30,
-    ),
-    'name': 'Entertainment',
-    'color': Colors.blue, // Blue can represent fun and entertainment
-    'totalamount': '₹660.67',
+    'name': 'Movie Night',
+    'totalamount': '₹550.00',
+    'date': 'Yesterday',
+    'description': 'Watched the latest blockbuster',
+    'category': 'Entertainment',
+  },
+  {
+    'name': 'Trip to Japan',
+    'totalamount': '₹1,50,000.00',
+    'date': 'Last Week',
+    'description': 'Flight tickets and accommodation for Japan',
+    'category': 'Travel',
+  },
+  {
+    'name': 'Taxi to Delhi',
+    'totalamount': '₹3,200.00',
     'date': 'Today',
+    'description': 'Cab fare for business travel',
+    'category': 'Travel',
   },
   {
-    'icon': const FaIcon(
-      FontAwesomeIcons.planeDeparture,
-      color: Colors.white,
-      size: 30,
-    ),
-    'name': 'Travel',
-    'color': Colors.orange, // Orange evokes a sense of adventure and travel
-    'totalamount': '₹5500.00',
+    'name': 'Hospital Bill',
+    'totalamount': '₹10,000.00',
+    'date': '2 Days ago',
+    'description': 'Medical check-up and treatment',
+    'category': 'Medical',
+  },
+  {
+    'name': 'Internet Bill',
+    'totalamount': '₹999.00',
     'date': 'Yesterday',
+    'description': 'Monthly broadband payment',
+    'category': 'Recharge',
   },
   {
-    'icon': const FaIcon(
-      FontAwesomeIcons.kitMedical,
-      color: Colors.white,
-      size: 30,
-    ),
-    'name': 'Medical',
-    'color': Colors.green, // Green represents health and wellness
-    'totalamount': '₹360.00',
-    'date': 'Yesterday',
+    'name': 'Rent Payment',
+    'totalamount': '₹12,000.00',
+    'date': '1 Week ago',
+    'description': 'Monthly house rent',
+    'category': 'Rent',
   },
   {
-    'icon': const FaIcon(
-      FontAwesomeIcons.phone,
-      color: Colors.white,
-      size: 30,
-    ),
-    'name': 'Recharge',
-    'color':
-        Colors.teal, // Teal is a fresh color, good for utilities like recharge
-    'totalamount': '₹778.00',
-    'date': 'Yesterday',
+    'name': 'Freelance Work',
+    'totalamount': '₹15,000.00',
+    'date': 'Today',
+    'description': 'Payment received for freelance project',
+    'category': 'Others',
   },
   {
-    'icon': const FaIcon(
-      FontAwesomeIcons.house,
-      color: Colors.white,
-      size: 30,
-    ),
-    'name': 'Rent',
-    'color':
-        Colors.brown, // Brown represents stability, fitting for rent or home
-    'totalamount': '₹11000.00',
+    'name': 'Car Fuel',
+    'totalamount': '₹2,000.00',
     'date': '3 Days ago',
+    'description': 'Petrol for the car',
+    'category': 'Automobile',
   },
-  {
-    'icon': const FaIcon(
-      FontAwesomeIcons.cashRegister,
-      color: Colors.white,
-      size: 30,
-    ),
-    'name': 'Others',
-    'color': Colors.grey, // Grey for miscellaneous or other expenses
-    'totalamount': '₹3400.00',
-    'date': 'Today',
-  }
 ];
 
-// CateGories
-
+// Categories
 final List<Map<String, dynamic>> DataCategories = [
   {
     'icon': const FaIcon(
       FontAwesomeIcons.burger,
-      color: Colors.red, // Icon color matches the category color
+      color: Colors.white, // Icon color matches the category color
       size: 30,
     ),
     'name': 'Food',
@@ -109,7 +88,7 @@ final List<Map<String, dynamic>> DataCategories = [
   {
     'icon': const FaIcon(
       FontAwesomeIcons.bagShopping,
-      color: Colors.pink, // Icon color matches the category color
+      color: Colors.white, // Icon color matches the category color
       size: 30,
     ),
     'name': 'Shopping',
@@ -118,7 +97,7 @@ final List<Map<String, dynamic>> DataCategories = [
   {
     'icon': const FaIcon(
       FontAwesomeIcons.ticket,
-      color: Colors.blue, // Icon color matches the category color
+      color: Colors.white, // Icon color matches the category color
       size: 30,
     ),
     'name': 'Entertainment',
@@ -127,7 +106,7 @@ final List<Map<String, dynamic>> DataCategories = [
   {
     'icon': const FaIcon(
       FontAwesomeIcons.planeDeparture,
-      color: Colors.orange, // Icon color matches the category color
+      color: Colors.white, // Icon color matches the category color
       size: 30,
     ),
     'name': 'Travel',
@@ -136,7 +115,7 @@ final List<Map<String, dynamic>> DataCategories = [
   {
     'icon': const FaIcon(
       FontAwesomeIcons.kitMedical,
-      color: Colors.green, // Icon color matches the category color
+      color: Colors.white, // Icon color matches the category color
       size: 30,
     ),
     'name': 'Medical',
@@ -145,7 +124,7 @@ final List<Map<String, dynamic>> DataCategories = [
   {
     'icon': const FaIcon(
       FontAwesomeIcons.phone,
-      color: Colors.teal, // Icon color matches the category color
+      color: Colors.white, // Icon color matches the category color
       size: 30,
     ),
     'name': 'Recharge',
@@ -155,7 +134,7 @@ final List<Map<String, dynamic>> DataCategories = [
   {
     'icon': const FaIcon(
       FontAwesomeIcons.house,
-      color: Colors.brown, // Icon color matches the category color
+      color: Colors.white, // Icon color matches the category color
       size: 30,
     ),
     'name': 'Rent',
@@ -165,10 +144,30 @@ final List<Map<String, dynamic>> DataCategories = [
   {
     'icon': const FaIcon(
       FontAwesomeIcons.cashRegister,
-      color: Colors.grey, // Icon color matches the category color
+      color: Colors.white, // Icon color matches the category color
       size: 30,
     ),
     'name': 'Others',
     'color': Colors.grey, // Grey for miscellaneous or other expenses
+  },
+  {
+    'icon': const FaIcon(
+      FontAwesomeIcons.car,
+      color: Colors.white, // Icon color matches the category color
+      size: 30,
+    ),
+    'name': 'Automobile',
+    'color': Colors.blueGrey, // Grey for miscellaneous or other expenses
   }
 ];
+
+Map<String, dynamic> getCategoryDetails(String category) {
+  return DataCategories.firstWhere(
+    (cat) => cat['name'] == category,
+    orElse: () => {
+      'icon': const FaIcon(FontAwesomeIcons.question,
+          color: Colors.white, size: 30),
+      'color': Colors.grey,
+    },
+  );
+}

@@ -26,9 +26,7 @@ class _AddExpenseState extends State<AddExpense> {
             SizedBox(
               height: double.maxFinite,
               width: double.maxFinite,
-              child: Container(
-                color: HexColor("34394b"),
-              ),
+              child: Image.asset('assets')
             ),
             SafeArea(
                 child: Padding(

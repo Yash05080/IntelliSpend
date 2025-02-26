@@ -19,7 +19,7 @@ class _StatsPageState extends State<StatsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Transactions",
+              "Analytics",
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,

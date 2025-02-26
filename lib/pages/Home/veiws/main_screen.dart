@@ -130,9 +130,13 @@ class _MainScreenState extends State<MainScreen> {
             //transactions list
 
             Expanded(
+                child: Expanded(
               child: ListView.builder(
                 itemCount: transactionsData.length,
                 itemBuilder: (context, int i) {
+                  var categoryDetails =
+                      getCategoryDetails(transactionsData[i]['category']);
+
                   return Padding(
                     padding:
                         const EdgeInsets.only(bottom: 25.0, left: 5, right: 5),
@@ -146,8 +150,6 @@ class _MainScreenState extends State<MainScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // row for category name and icon
-
                             Row(
                               children: [
                                 Stack(alignment: Alignment.center, children: [
@@ -155,15 +157,13 @@ class _MainScreenState extends State<MainScreen> {
                                     height: 60,
                                     width: 60,
                                     decoration: BoxDecoration(
-                                      color: transactionsData[i]['color'],
+                                      color: categoryDetails['color'],
                                       shape: BoxShape.circle,
                                     ),
                                   ),
-                                  Center(child: transactionsData[i]['icon'])
+                                  Center(child: categoryDetails['icon'])
                                 ]),
-                                const SizedBox(
-                                  width: 10,
-                                ),
+                                const SizedBox(width: 10),
                                 Text(
                                   transactionsData[i]['name'],
                                   style: TextStyle(
@@ -175,9 +175,6 @@ class _MainScreenState extends State<MainScreen> {
                                 ),
                               ],
                             ),
-
-                            //Column for amount and day
-
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
@@ -207,7 +204,7 @@ class _MainScreenState extends State<MainScreen> {
                   );
                 },
               ),
-            )
+            ))
           ],
         ),
       ),
