@@ -1,4 +1,5 @@
 import 'package:finance_manager_app/pages/Home/veiws/HomePage.dart';
+import 'package:finance_manager_app/pages/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: MyHomePage(),
+      home: AuthScreen(),
     );
   }
 }
