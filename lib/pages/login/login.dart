@@ -1,3 +1,4 @@
+import 'package:finance_manager_app/pages/login/authservice.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,6 +13,7 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -114,9 +116,9 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(height: 20),
               ElevatedButton.icon(
-                onPressed: () {
-                  // Handle Google Sign-In
-                },
+                onPressed: () async {
+            await _authService.signInWithGoogle();
+          },
                 icon: Icon(FontAwesomeIcons.google, color: Colors.white),
                 label: Text("Sign in with Google"),
                 style: ElevatedButton.styleFrom(
