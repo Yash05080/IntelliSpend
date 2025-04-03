@@ -20,7 +20,7 @@ import (
 var googleOauthConfig = &oauth2.Config{
 	ClientID:     config.GetEnv("GOOGLE_CLIENT_ID"),
 	ClientSecret: config.GetEnv("GOOGLE_CLIENT_SECRET"),
-	RedirectURL:  "http://localhost:8080/auth/callback", // Not used in mobile apps
+	RedirectURL:  "http://127.0.0.1:8080/auth/google/callback", // Not used in mobile apps
 	Scopes:       []string{"email", "profile"},
 	Endpoint:     google.Endpoint,
 }

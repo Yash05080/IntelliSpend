@@ -111,8 +111,10 @@ class _AuthScreenState extends State<AuthScreen> {
               const SizedBox(height: 20),
               ElevatedButton.icon(
                 onPressed: () async {
-            await _authService.signInWithGoogle();
-          },
+                  print("button clicked");
+                  await _authService.signInWithGoogle();
+                  print("auth done");
+                },
                 icon: Icon(FontAwesomeIcons.google, color: Colors.white),
                 label: Text("Sign in with Google"),
                 style: ElevatedButton.styleFrom(

@@ -126,7 +126,8 @@ class _MyChartState extends State<MyChart> {
         break;
     }
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      //axisSide: meta.axisSide,
+      meta: meta,
       space: 16,
       child: text,
     );
@@ -155,8 +156,10 @@ class _MyChartState extends State<MyChart> {
       return Container();
     }
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      
       space: 16,
+      
+      meta: meta,
       child: Text(
         text,
         style: style,
