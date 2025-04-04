@@ -1,33 +1,32 @@
-import 'package:finance_manager_app/pages/Login%20page/authservice.dart';
-import 'package:finance_manager_app/pages/Login%20page/register.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _RegisterPageState extends State<RegisterPage> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final AuthService _authService = AuthService();
+  final TextEditingController _confirmPassController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       body: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Welcome Back",
+                "Create Account",
                 style: GoogleFonts.poppins(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -36,7 +35,7 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(height: 10),
               Text(
-                "Login to your account",
+                "Fill the details to register",
                 style: GoogleFonts.poppins(fontSize: 16, color: Colors.black54),
               ),
               const SizedBox(height: 30),
@@ -55,6 +54,29 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
                 child: Column(
                   children: [
+                    TextField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        labelText: "Full Name",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        prefixIcon: const Icon(Icons.person),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    TextField(
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                        labelText: "Phone Number",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        prefixIcon: const Icon(Icons.phone),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
                     TextField(
                       controller: _emailController,
                       decoration: InputDecoration(
@@ -77,11 +99,25 @@ class _AuthScreenState extends State<AuthScreen> {
                         prefixIcon: const Icon(Icons.lock),
                       ),
                     ),
+                    const SizedBox(height: 15),
+                    TextField(
+                      controller: _confirmPassController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: "Confirm Password",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        prefixIcon: const Icon(Icons.lock_outline),
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          // You can add validation and registration logic here
+                        },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           backgroundColor: Colors.brown,
@@ -90,19 +126,8 @@ class _AuthScreenState extends State<AuthScreen> {
                           ),
                         ),
                         child: const Text(
-                          "Login",
+                          "Register",
                           style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    GestureDetector(
-                      onTap: () {},
-                      child: const Text(
-                        "Forgot Password?",
-                        style: TextStyle(
-                          color: Colors.blue,
-                          decoration: TextDecoration.underline,
                         ),
                       ),
                     ),
@@ -110,36 +135,16 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton.icon(
-                onPressed: () async {
-                  print("button clicked");
-                  await _authService.signInWithGoogle();
-                  print("auth done");
-                },
-                icon: Icon(FontAwesomeIcons.google, color: Colors.white),
-                label: Text("Sign in with Google"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-              ),
-              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't have an account? "),
+                  const Text("Already have an account? "),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RegisterPage()));
+                      Navigator.pop(context); // or navigate to Login page
                     },
                     child: const Text(
-                      "Sign Up",
+                      "Login",
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
