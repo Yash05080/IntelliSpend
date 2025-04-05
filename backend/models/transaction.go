@@ -4,8 +4,10 @@ import "gorm.io/gorm"
 
 type Transaction struct {
 	gorm.Model
-	Title       string  `json:"title"`
-	Amount      float64 `json:"amount"`
+	Name        string  `json:"name"`
+	TotalAmount float64 `json:"totalamount"`
+	Date        string  `json:"date"`
+	Description string  `json:"description"`
 	Category    string  `json:"category"`
-	TransactionType string `json:"transaction_type"` // "income" or "expense"
+	Type        string  `json:"type"` // "income" or "expense"
 }

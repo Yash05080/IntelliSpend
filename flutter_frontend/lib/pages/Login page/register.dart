@@ -138,7 +138,10 @@ class _RegisterPageState extends State<RegisterPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Already have an account? "),
+                  const Text(
+                    "Already have an account? ",
+                    style: TextStyle(color: Colors.black),
+                  ),
                   GestureDetector(
                     onTap: () {
                       Navigator.pop(context); // or navigate to Login page

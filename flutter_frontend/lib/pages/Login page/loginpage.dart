@@ -130,7 +130,10 @@ class _AuthScreenState extends State<AuthScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't have an account? "),
+                  const Text(
+                    "Don't have an account? ",
+                    style: TextStyle(color: Colors.black),
+                  ),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
