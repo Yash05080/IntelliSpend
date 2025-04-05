@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 void main() {
-  
   runApp(MyApp());
 }
 
@@ -21,12 +20,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.light(
           // ignore: deprecated_member_use
-          background: HexColor("191d2d"),
-          onSurface: HexColor("FFFFFF"), //text
-          primary: HexColor("F2C341"), //deep teal
-          secondary: HexColor("f1a410"), //aqua mint
-          tertiary: HexColor("f3696e"), //charcoal grey
-          outline: HexColor("f1a410"), //subtext
+          background: HexColor("191d2d"), // dark navy blue
+          onSurface: HexColor("FFFFFF"), // white (text)
+          primary: HexColor("F2C341"), // golden yellow
+          secondary: HexColor("f1a410"), // orange
+          tertiary: HexColor("f3696e"), // coral pink
+          outline: HexColor("f1a410"), // orange (subtext)
         ),
         useMaterial3: true,
       ),

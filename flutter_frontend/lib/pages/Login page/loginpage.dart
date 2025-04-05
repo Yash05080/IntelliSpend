@@ -3,6 +3,7 @@ import 'package:finance_manager_app/pages/Login%20page/register.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -12,14 +13,30 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final TextEditingController _emailController = TextEditingController();
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+
+    super.dispose();
+  }
+
+  bool _obscureText = true;
+
+  void _toggleVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: HexColor("191d2d"), // Dark navy blue
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -31,19 +48,20 @@ class _AuthScreenState extends State<AuthScreen> {
                 style: GoogleFonts.poppins(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: HexColor("FFFFFF"), // white text
                 ),
               ),
               const SizedBox(height: 10),
               Text(
                 "Login to your account",
-                style: GoogleFonts.poppins(fontSize: 16, color: Colors.black54),
+                style: GoogleFonts.poppins(
+                    fontSize: 16, color: HexColor("FFFFFF").withOpacity(0.7)),
               ),
               const SizedBox(height: 30),
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: HexColor("2a2f45"), // lighter navy blue background
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
@@ -55,26 +73,67 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
                 child: Column(
                   children: [
-                    TextField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: "Email",
-                        border: OutlineInputBorder(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          border:
+                              Border.all(color: HexColor("f1a410")), // outline
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        prefixIcon: const Icon(Icons.email),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15.0),
+                          child: TextField(
+                            controller: _usernameController,
+                            style: TextStyle(
+                                color: HexColor("F2C341")), // golden yellow
+                            cursorColor: HexColor("F2C341"),
+                            decoration: InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.person,
+                                color: HexColor("f3696e"), // coral pink icon
+                              ),
+                              hintText: "username",
+                              hintStyle: TextStyle(color: Colors.grey.shade400),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 15),
-                    TextField(
-                      controller: _passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: "Password",
-                        border: OutlineInputBorder(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          border: Border.all(color: HexColor("f1a410")),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        prefixIcon: const Icon(Icons.lock),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15.0),
+                          child: TextField(
+                            controller: _passwordController,
+                            style: TextStyle(color: HexColor("F2C341")),
+                            cursorColor: HexColor("F2C341"),
+                            obscureText: _obscureText,
+                            decoration: InputDecoration(
+                              hintText: "password",
+                              hintStyle: TextStyle(color: Colors.grey.shade400),
+                              border: InputBorder.none,
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscureText
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: HexColor("f3696e"),
+                                ),
+                                onPressed: _toggleVisibility,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -84,24 +143,27 @@ class _AuthScreenState extends State<AuthScreen> {
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          backgroundColor: Colors.brown,
+                          backgroundColor:
+                              HexColor("F2C341"), // golden yellow button
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: const Text(
+                        child: Text(
                           "Login",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: HexColor("191d2d")), // dark text on yellow
                         ),
                       ),
                     ),
                     const SizedBox(height: 10),
                     GestureDetector(
                       onTap: () {},
-                      child: const Text(
+                      child: Text(
                         "Forgot Password?",
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: HexColor("f1a410"),
                           decoration: TextDecoration.underline,
                         ),
                       ),
@@ -119,7 +181,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 icon: Icon(FontAwesomeIcons.google, color: Colors.white),
                 label: Text("Sign in with Google"),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
+                  backgroundColor: HexColor("f3696e"), // coral pink
                   foregroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
                   shape: RoundedRectangleBorder(
@@ -130,9 +192,9 @@ class _AuthScreenState extends State<AuthScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     "Don't have an account? ",
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: HexColor("FFFFFF")),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -141,10 +203,10 @@ class _AuthScreenState extends State<AuthScreen> {
                           MaterialPageRoute(
                               builder: (context) => RegisterPage()));
                     },
-                    child: const Text(
+                    child: Text(
                       "Sign Up",
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: HexColor("f1a410"),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
