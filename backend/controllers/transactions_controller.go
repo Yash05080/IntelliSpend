@@ -8,22 +8,28 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CreateTransaction now links to authenticated user
 func CreateTransaction(c *gin.Context) {
-	var transaction models.Transaction
-	if err := c.ShouldBindJSON(&transaction); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	config.DB.Create(&transaction)
-	c.JSON(http.StatusOK, gin.H{"message": "Transaction added", "data": transaction})
+    userID := c.GetUint("user_id")
+    var txn models.Transaction
+    if err := c.ShouldBindJSON(&txn); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+    txn.UserID = userID
+    config.DB.Create(&txn)
+    c.JSON(http.StatusOK, gin.H{"message": "Transaction added", "data": txn})
 }
 
+// GetTransactions returns only this user's transactions
 func GetTransactions(c *gin.Context) {
-	var transactions []models.Transaction
-	config.DB.Find(&transactions)
-	c.JSON(http.StatusOK, transactions)
+    userID := c.GetUint("user_id")
+    var txns []models.Transaction
+    config.DB.Where("user_id = ?", userID).Find(&txns)
+    c.JSON(http.StatusOK, txns)
 }
+
+// Other handlers (Get by ID, Delete) similarly filter by user_id
 
 func GetTransactionByID(c *gin.Context) {
 	id := c.Param("id")

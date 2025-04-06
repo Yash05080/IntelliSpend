@@ -1,84 +1,85 @@
 package controllers
 
 import (
-	//"context"
-	"encoding/json"
-	"fmt"
-	"io"
-	"net/http"
-	//"time"
+    "backend/config"
+    "backend/models"
+    "backend/utils"
+    //"encoding/json"
+    "fmt"
+    "net/http"
+    "time"
 
-	"backend/config"
-	"backend/models"
-	"backend/utils"
-
-	"github.com/gin-gonic/gin"
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/google"
+    "github.com/gin-gonic/gin"
 )
 
-var googleOauthConfig = &oauth2.Config{
-	ClientID:     config.GetEnv("GOOGLE_CLIENT_ID"),
-	ClientSecret: config.GetEnv("GOOGLE_CLIENT_SECRET"),
-	RedirectURL:  "http://127.0.0.1:8080/auth/google/callback", // Not used in mobile apps
-	Scopes:       []string{"email", "profile"},
-	Endpoint:     google.Endpoint,
+// POST /auth/register
+// Body: { "email": "user@example.com" }
+func Register(c *gin.Context) {
+    var req struct { Email string `json:"email"` }
+    if err := c.ShouldBindJSON(&req); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email payload"})
+        return
+    }
+
+    // Find or create user by email
+    var user models.User
+    result := config.DB.Where("email = ?", req.Email).First(&user)
+    if result.Error != nil {
+        user = models.User{Email: req.Email}
+        config.DB.Create(&user)
+    }
+
+    // Generate OTP
+    code := fmt.Sprintf("%06d", time.Now().UnixNano()%1000000)
+    otp := models.OTP{UserID: user.ID, Code: code, ExpiresAt: time.Now().Add(10 * time.Minute)}
+    config.DB.Create(&otp)
+
+    // Send email
+    body := fmt.Sprintf("Your IntelliSpend OTP is: %s. It expires in 10 minutes.", code)
+    if err := utils.SendEmail(user.Email, "Your OTP Code", body); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send OTP email"})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"message": "OTP sent to email"})
 }
 
-// Handle Google OAuth login from Flutter
-func GoogleAuth(c *gin.Context) {
-	var request struct {
-		IdToken string `json:"idToken"`
+// POST /auth/verify
+// Body: { "email": "user@example.com", "otp": "123456" }
+func Verify(c *gin.Context) {
+    var req struct {
+		Email string `json:"email"`
+		OTP   string `json:"otp"`
 	}
+    if err := c.ShouldBindJSON(&req); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid payload"})
+        return
+    }
 
-	if err := c.ShouldBindJSON(&request); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
-		return
-	}
+    // Lookup user
+    var user models.User
+    if err := config.DB.Where("email = ?", req.Email).First(&user).Error; err != nil {
+        c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
+        return
+    }
 
-	// Verify ID Token with Google
-	googleUser, err := verifyGoogleToken(request.IdToken)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid ID token"})
-		return
-	}
+    // Lookup OTP
+    var otp models.OTP
+    if err := config.DB.Where("user_id = ? AND code = ? AND used = FALSE AND expires_at > ?", user.ID, req.OTP, time.Now()).First(&otp).Error; err != nil {
+        c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired OTP"})
+        return
+    }
 
-	// Check if user exists in DB, else create new user
-	user := models.FindOrCreateUser(googleUser)
+    // Mark OTP used
+    otp.Used = true
+    config.DB.Save(&otp)
 
-	// Generate JWT token for the user
-	jwtToken, err := utils.GenerateJWT(user.Email)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create JWT"})
-		return
-	}
+    // Issue JWT
+    token, err := utils.GenerateJWT(user.ID)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+        return
+    }
 
-	c.JSON(http.StatusOK, gin.H{"token": jwtToken, "user": user})
-}
-
-// Verify Google ID Token
-func verifyGoogleToken(idToken string) (*models.GoogleUser, error) {
-	tokenInfoURL := "https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken
-	resp, err := http.Get(tokenInfoURL)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	var googleUser models.GoogleUser
-	if err := json.Unmarshal(body, &googleUser); err != nil {
-		return nil, err
-	}
-
-	// Ensure the token is valid for your client
-	if googleUser.Audience != config.GetEnv("GOOGLE_CLIENT_ID") {
-		return nil, fmt.Errorf("invalid token audience")
-	}
-
-	return &googleUser, nil
+    c.JSON(http.StatusOK, gin.H{"token": token, "user": user})
 }

@@ -1,10 +1,26 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
-	"backend/controllers"
+    "backend/controllers"
+    "backend/middleware"
+    "github.com/gin-gonic/gin"
 )
 
-func RegisterRoutes(router *gin.Engine) {
-	router.POST("/auth/google", controllers.GoogleAuth)
+func SetupRoutes(router *gin.Engine) {
+    auth := router.Group("/auth")
+    {
+        auth.POST("/register", controllers.Register)
+        auth.POST("/verify", controllers.Verify)
+        // later: auth.POST("/google", controllers.GoogleAuth)
+    }
+
+    // Protected transaction routes
+    txn := router.Group("/transactions")
+    txn.Use(middleware.AuthRequired())
+    {
+        txn.POST("/", controllers.CreateTransaction)
+        txn.GET("/", controllers.GetTransactions)
+        txn.GET("/:id", controllers.GetTransactionByID)
+        txn.DELETE("/:id", controllers.DeleteTransaction)
+    }
 }

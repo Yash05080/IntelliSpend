@@ -8,6 +8,8 @@ import (
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"backend/models" // change to your actual module name
 )
 
 var DB *gorm.DB
@@ -32,5 +34,16 @@ func ConnectDatabase() {
 	}
 
 	DB = database
-	fmt.Println("✅ Connected to Database")
+
+	// Auto migrate all models
+	err = DB.AutoMigrate(
+		&models.User{},
+		&models.OTP{},
+		&models.Transaction{},
+	)
+	if err != nil {
+		log.Fatal("Failed to migrate models:", err)
+	}
+
+	fmt.Println("✅ Database connected and models migrated")
 }
