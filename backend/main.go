@@ -14,7 +14,8 @@ func main() {
 	config.ConnectDatabase()
 
 	// Auto-Migrate Models
-	config.DB.AutoMigrate(&models.Transaction{})
+	config.DB.AutoMigrate(&models.User{}, &models.OTP{})
+
 
 	// Set up Router
 	router := gin.Default()

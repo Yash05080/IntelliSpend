@@ -10,7 +10,7 @@ func SetupRoutes(router *gin.Engine) {
     auth := router.Group("/auth")
     {
         auth.POST("/register", controllers.Register)
-        auth.POST("/verify", controllers.Verify)
+        auth.POST("/verify", controllers.VerifyOTP)
         // later: auth.POST("/google", controllers.GoogleAuth)
     }
 
