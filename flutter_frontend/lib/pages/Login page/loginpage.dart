@@ -1,4 +1,5 @@
 import 'package:finance_manager_app/pages/Login%20page/authservice.dart';
+import 'package:finance_manager_app/pages/Login%20page/otpscreen.dart';
 import 'package:finance_manager_app/pages/Login%20page/register.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -140,7 +141,22 @@ class _AuthScreenState extends State<AuthScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          String generatedOTP =
+                              "123456"; // This would come from your API or service
+
+// Navigate to OTP verification page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => OTPScreen(
+                                expectedOTP:
+                                    generatedOTP, // Pass the OTP to verify against
+                                
+                              ),
+                            ),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           backgroundColor:
@@ -175,7 +191,7 @@ class _AuthScreenState extends State<AuthScreen> {
               ElevatedButton.icon(
                 onPressed: () async {
                   print("button clicked");
-                  await _authService.signInWithGoogle();
+                  
                   print("auth done");
                 },
                 icon: Icon(FontAwesomeIcons.google, color: Colors.white),

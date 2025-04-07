@@ -1,49 +1,30 @@
-import 'package:google_sign_in/google_sign_in.dart';
-
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthService {
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    serverClientId:
-        "550454460343-ibjm9b2n99576lcsjt0ohe0el4742evp.apps.googleusercontent.com", // Replace with your OAuth client ID
-    scopes: ['email','profile'],
-  );
+  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://127.0.0.1:8080/api'));
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  Future<void> signInWithGoogle() async {
-  try {
-    print("Attempting Google Sign-In...");
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-    if (googleUser == null) {
-      print("User cancelled sign-in");
-      return;
-    }
-
-    print("Signed in as: ${googleUser.email}");
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-    final String? idToken = googleAuth.idToken;
-
-    if (idToken == null) {
-      print("Failed to retrieve ID token");
-      return;
-    }
-
-    print("Sending ID Token to backend...");
-    final response = await http.post(
-      Uri.parse("http://127.0.0.1:8080/api/auth/google"),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"idToken": idToken}),
-    );
-
-    if (response.statusCode == 200) {
-      print("User authenticated successfully: ${response.body}");
-    } else {
-      print("Authentication failed: ${response.body}");
-    }
-  } catch (e, stacktrace) {
-    print("Error signing in: $e");
-    print(stacktrace);
+  Future<void> sendOtp(String email) async {
+    await _dio.post('/auth/request-otp', data: {'email': email});
   }
-}
 
+  Future<String> verifyOtp(String email, String otp) async {
+    final response = await _dio.post('/auth/verify-otp', data: {
+      'email': email,
+      'otp': otp,
+    });
+
+    final token = response.data['token'];
+    await _storage.write(key: 'jwt_token', value: token);
+    return token;
+  }
+
+  Future<void> logout() async {
+    await _storage.delete(key: 'jwt_token');
+  }
+
+  Future<String?> getToken() async {
+    return await _storage.read(key: 'jwt_token');
+  }
 }
