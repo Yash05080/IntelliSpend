@@ -3,55 +3,73 @@ package controllers
 import (
 	"backend/config"
 	"backend/models"
+	
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-// CreateTransaction now links to authenticated user
+// CreateTransaction creates a new transaction linked to the authenticated user.
 func CreateTransaction(c *gin.Context) {
-    userID := c.GetUint("user_id")
-    var txn models.Transaction
-    if err := c.ShouldBindJSON(&txn); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
-    txn.UserID = userID
-    config.DB.Create(&txn)
-    c.JSON(http.StatusOK, gin.H{"message": "Transaction added", "data": txn})
+	// Get authenticated user_id (set by your JWT middleware)
+	userID := c.GetUint("user_id")
+	var txn models.Transaction
+	if err := c.ShouldBindJSON(&txn); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	txn.UserID = userID
+
+	if err := config.DB.Create(&txn).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create transaction"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Transaction added", "data": txn})
 }
 
-// GetTransactions returns only this user's transactions
+// GetTransactions returns only the transactions of the authenticated user.
 func GetTransactions(c *gin.Context) {
-    userID := c.GetUint("user_id")
-    var txns []models.Transaction
-    config.DB.Where("user_id = ?", userID).Find(&txns)
-    c.JSON(http.StatusOK, txns)
+	userID := c.GetUint("user_id")
+	var txns []models.Transaction
+
+	if err := config.DB.Where("user_id = ?", userID).Find(&txns).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve transactions"})
+		return
+	}
+
+	c.JSON(http.StatusOK, txns)
 }
 
-// Other handlers (Get by ID, Delete) similarly filter by user_id
-
+// GetTransactionByID returns a single transaction if it belongs to the authenticated user.
 func GetTransactionByID(c *gin.Context) {
+	userID := c.GetUint("user_id")
 	id := c.Param("id")
-	var transaction models.Transaction
+	var txn models.Transaction
 
-	if err := config.DB.First(&transaction, id).Error; err != nil {
+	if err := config.DB.Where("id = ? AND user_id = ?", id, userID).First(&txn).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Transaction not found"})
 		return
 	}
 
-	c.JSON(http.StatusOK, transaction)
+	c.JSON(http.StatusOK, txn)
 }
 
+// DeleteTransaction deletes a transaction if it belongs to the authenticated user.
 func DeleteTransaction(c *gin.Context) {
+	userID := c.GetUint("user_id")
 	id := c.Param("id")
-	var transaction models.Transaction
+	var txn models.Transaction
 
-	if err := config.DB.First(&transaction, id).Error; err != nil {
+	if err := config.DB.Where("id = ? AND user_id = ?", id, userID).First(&txn).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Transaction not found"})
 		return
 	}
 
-	config.DB.Delete(&transaction)
+	if err := config.DB.Delete(&txn).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete transaction"})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{"message": "Transaction deleted"})
 }

@@ -9,15 +9,16 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"backend/models" // change to your actual module name
+	"backend/models"  // update with your module path if needed
 )
 
 var DB *gorm.DB
 
+// ConnectDatabase connects to the PostgreSQL database and migrates models.
 func ConnectDatabase() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Println("Warning: .env file not loaded:", err)
 	}
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
@@ -32,10 +33,9 @@ func ConnectDatabase() {
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
-
 	DB = database
 
-	// Auto migrate all models
+	// Auto-migrate models.
 	err = DB.AutoMigrate(
 		&models.User{},
 		&models.OTP{},

@@ -1,26 +1,29 @@
 package routes
 
 import (
-    "backend/controllers"
-    "backend/middleware"
-    "github.com/gin-gonic/gin"
+	"backend/controllers"
+	"backend/middleware"
+
+	"github.com/gin-gonic/gin"
 )
 
+// SetupRoutes configures API endpoints.
 func SetupRoutes(router *gin.Engine) {
-    auth := router.Group("/auth")
-    {
-        auth.POST("/register", controllers.Register)
-        auth.POST("/verify", controllers.VerifyOTP)
-        // later: auth.POST("/google", controllers.GoogleAuth)
-    }
+	// Auth endpoints under /api/auth
+	auth := router.Group("/api/auth")
+	{
+		auth.POST("/register", controllers.Register)       // Registration endpoint
+		auth.POST("/verify-otp", controllers.VerifyOTP)      // OTP verification endpoint
+		auth.POST("/login", controllers.Login)               // Login endpoint
+	}
 
-    // Protected transaction routes
-    txn := router.Group("/transactions")
-    txn.Use(middleware.AuthRequired())
-    {
-        txn.POST("/", controllers.CreateTransaction)
-        txn.GET("/", controllers.GetTransactions)
-        txn.GET("/:id", controllers.GetTransactionByID)
-        txn.DELETE("/:id", controllers.DeleteTransaction)
-    }
+	// Transaction endpoints under /api/transactions, protected by Auth middleware.
+	txn := router.Group("/api/transactions")
+	txn.Use(middleware.AuthRequired())
+	{
+		txn.POST("/", controllers.CreateTransaction)         // Create a new transaction
+		txn.GET("/", controllers.GetTransactions)            // Get all transactions for the user
+		txn.GET("/:id", controllers.GetTransactionByID)      // Get a transaction by ID
+		txn.DELETE("/:id", controllers.DeleteTransaction)    // Delete a transaction by ID
+	}
 }

@@ -2,20 +2,24 @@ package utils
 
 import (
 	"errors"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtKey = []byte("my_secret_key") // In production, load from environment
+var jwtKey = []byte(os.Getenv("JWT_SECRET"))
 
-// GenerateJWT generates a JWT token using the provided subject (e.g., user ID).
-func GenerateJWT(subject string) (string, error) {
+// GenerateJWT generates a JWT token using the provided userID (uint).
+func GenerateJWT(userID uint) (string, error) {
 	expirationTime := time.Now().Add(24 * time.Hour)
+
 	claims := &jwt.RegisteredClaims{
 		ExpiresAt: jwt.NewNumericDate(expirationTime),
-		Subject:   subject,
+		Subject:   strconv.FormatUint(uint64(userID), 10), // uint → string
 	}
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(jwtKey)
 	if err != nil {
@@ -24,14 +28,25 @@ func GenerateJWT(subject string) (string, error) {
 	return tokenString, nil
 }
 
-// ValidateJWT validates the token string and returns the subject if valid.
-func ValidateJWT(tokenString string) (string, error) {
+// ValidateJWT validates the token and returns the userID (uint) if valid.
+func ValidateJWT(tokenString string) (uint, error) {
 	claims := &jwt.RegisteredClaims{}
-	_, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(t *jwt.Token) (interface{}, error) {
 		return jwtKey, nil
 	})
-	if err != nil {
-		return "", errors.New("invalid token")
+
+	if err != nil || !token.Valid {
+		return 0, errors.New("invalid token")
 	}
-	return claims.Subject, nil
+
+	if claims.ExpiresAt == nil || claims.ExpiresAt.Before(time.Now()) {
+		return 0, errors.New("token expired")
+	}
+
+	userID, err := strconv.ParseUint(claims.Subject, 10, 64)
+	if err != nil {
+		return 0, errors.New("invalid user ID in token")
+	}
+
+	return uint(userID), nil
 }

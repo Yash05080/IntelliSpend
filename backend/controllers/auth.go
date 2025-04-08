@@ -11,6 +11,39 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+
+type LoginInput struct {
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required"`
+}
+
+func Login(c *gin.Context) {
+	var input LoginInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var user models.User
+	if err := config.DB.Where("email = ?", input.Email).First(&user).Error; err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Account does not exist"})
+		return
+	}
+
+	if user.Password != input.Password {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Incorrect password"})
+		return
+	}
+
+	// Generate JWT
+	token, err := utils.GenerateJWT(user.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate token"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"token": token})
+}
 // Register endpoint: POST /auth/register
 // Body: { "email": "user@example.com" }
 func Register(c *gin.Context) {
@@ -89,11 +122,12 @@ func VerifyOTP(c *gin.Context) {
 	config.DB.Delete(&otp)
 
 	// Generate JWT using user's ID converted to string
-	token, err := utils.GenerateJWT(fmt.Sprintf("%d", user.ID))
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
-		return
-	}
+	token, err := utils.GenerateJWT(user.ID)
+if err != nil {
+	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+	return
+}
+
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "OTP verified successfully",

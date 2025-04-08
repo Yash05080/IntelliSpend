@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => const AddExpense()));
+              context, MaterialPageRoute(builder: (context) => const AddTransaction()));
         },
         elevation: 10,
         focusElevation: 0,
