@@ -1,30 +1,60 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthService {
-  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://127.0.0.1:8080/api'));
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://127.0.0.1:8080/api/auth'));
 
-  Future<void> sendOtp(String email) async {
-    await _dio.post('/auth/request-otp', data: {'email': email});
+  // Login: POST /login with {email, password}
+  Future<String> login(String email, String password) async {
+    try {
+      final response = await _dio.post('/login', data: {
+        'email': email,
+        'password': password,
+      });
+      if (response.statusCode == 200) {
+        return response.data['token'];
+      } else {
+        throw Exception(response.data['error'] ?? 'Login failed');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
-  Future<String> verifyOtp(String email, String otp) async {
-    final response = await _dio.post('/auth/verify-otp', data: {
-      'email': email,
-      'otp': otp,
-    });
-
-    final token = response.data['token'];
-    await _storage.write(key: 'jwt_token', value: token);
-    return token;
+  // Register: POST /register with {fullName, phone, email, password}
+  Future<bool> register(String fullName, String phone, String email, String password) async {
+    try {
+      final response = await _dio.post('/register', data: {
+        'fullName': fullName,
+        'phone': phone,
+        'email': email,
+        'password': password,
+      });
+      if (response.statusCode == 200) {
+        // For testing, print the OTP returned
+        print("OTP sent: ${response.data['otp']}");
+        return true;
+      } else {
+        throw Exception(response.data['error'] ?? 'Registration failed');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
-  Future<void> logout() async {
-    await _storage.delete(key: 'jwt_token');
-  }
-
-  Future<String?> getToken() async {
-    return await _storage.read(key: 'jwt_token');
+  // Verify OTP: POST /verify-otp with {email, otp}
+  Future<String> verifyOTP(String email, String otp) async {
+    try {
+      final response = await _dio.post('/verify-otp', data: {
+        'email': email,
+        'otp': otp,
+      });
+      if (response.statusCode == 200) {
+        return response.data['token'];
+      } else {
+        throw Exception(response.data['error'] ?? 'OTP Verification failed');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 }

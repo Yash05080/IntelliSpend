@@ -1,26 +1,31 @@
 package utils
 
 import (
-    "fmt"
-    "net/smtp"
-    "os"
+	"fmt"
+	"net/smtp"
+	"os"
 )
 
-// SendEmail sends a plain-text email
 func SendEmail(to, subject, body string) error {
-    host := os.Getenv("SMTP_HOST")
-    port := os.Getenv("SMTP_PORT")
-    user := os.Getenv("SMTP_USER")
-    pass := os.Getenv("SMTP_PASS")
-    from := os.Getenv("EMAIL_FROM")
+	from := os.Getenv("EMAIL_FROM")
+	password := os.Getenv("EMAIL_PASS")
 
-    auth := smtp.PlainAuth("", user, pass, host)
-    msg := []byte(
-        fmt.Sprintf("From: %s\r\n", from) +
-            fmt.Sprintf("To: %s\r\n", to) +
-            fmt.Sprintf("Subject: %s\r\n", subject) +
-            "\r\n" + body,
-    )
-    addr := fmt.Sprintf("%s:%s", host, port)
-    return smtp.SendMail(addr, auth, from, []string{to}, msg)
+	// Debug log the email details (remove sensitive info in production)
+	fmt.Println("Attempting to send email from:", from, "to:", to)
+	
+	msg := "From: " + from + "\n" +
+		"To: " + to + "\n" +
+		"Subject: " + subject + "\n\n" +
+		body
+
+	auth := smtp.PlainAuth("", from, password, "smtp.gmail.com")
+	
+	err := smtp.SendMail("smtp.gmail.com:587", auth, from, []string{to}, []byte(msg))
+	if err != nil {
+		fmt.Println("❌ Email sending failed:", err)
+		return err
+	}
+
+	fmt.Println("✅ OTP Email sent to:", to)
+	return nil
 }

@@ -4,8 +4,6 @@ import (
 	"backend/config"
 	"backend/models"
 	"backend/utils"
-
-	//"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -13,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// POST /auth/register
+// Register endpoint: POST /auth/register
 // Body: { "email": "user@example.com" }
 func Register(c *gin.Context) {
 	var req struct {
@@ -33,11 +31,10 @@ func Register(c *gin.Context) {
 	}
 
 	// Generate OTP
-	// Generate OTP
 	code := fmt.Sprintf("%06d", time.Now().UnixNano()%1000000)
 	otp := models.OTP{
 		UserID:    user.ID,
-		Email:     user.Email, // ✅ Add this line
+		Email:     user.Email, // Added this line
 		Code:      code,
 		ExpiresAt: time.Now().Add(10 * time.Minute),
 	}
@@ -53,14 +50,13 @@ func Register(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "OTP sent to email"})
 }
 
-// POST /auth/verify
+// VerifyOTP endpoint: POST /auth/verify
 // Body: { "email": "user@example.com", "otp": "123456" }
 func VerifyOTP(c *gin.Context) {
 	var req struct {
 		Email string `json:"email"`
 		OTP   string `json:"otp"`
 	}
-
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid payload"})
 		return
@@ -73,13 +69,13 @@ func VerifyOTP(c *gin.Context) {
 		return
 	}
 
-	// ⏳ Check for expiry (based on ExpiresAt field)
+	// Check for expiry
 	if time.Now().After(otp.ExpiresAt) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "OTP expired"})
 		return
 	}
 
-	// ✅ OTP is valid, continue with login/registration flow
+	// OTP is valid, continue with login/registration flow
 	var user models.User
 	if err := config.DB.Where("email = ?", req.Email).First(&user).Error; err != nil {
 		// Create new user if not exists
@@ -89,12 +85,15 @@ func VerifyOTP(c *gin.Context) {
 		config.DB.Create(&user)
 	}
 
-	// 🧹 Delete used OTP
+	// Delete used OTP
 	config.DB.Delete(&otp)
 
-	// 🔐 Generate JWT
-	// After token generation
-	token, _ := utils.GenerateJWT(user.ID)
+	// Generate JWT using user's ID converted to string
+	token, err := utils.GenerateJWT(fmt.Sprintf("%d", user.ID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "OTP verified successfully",
@@ -105,7 +104,6 @@ func VerifyOTP(c *gin.Context) {
 			"fullName": user.FullName,
 			"picture":  user.Picture,
 		},
-		"expiresIn": 3600 * 24, // e.g., if JWT is set to expire in 24h
+		"expiresIn": 3600 * 24, // e.g., JWT expires in 24h
 	})
-
 }

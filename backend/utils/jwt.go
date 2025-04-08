@@ -1,42 +1,37 @@
 package utils
 
 import (
-    "fmt"
-    "os"
-    "time"
+	"errors"
+	"time"
 
-    "github.com/golang-jwt/jwt/v5"
+	"github.com/golang-jwt/jwt/v5"
 )
 
-// GenerateJWT creates a signed JWT containing user ID
-func GenerateJWT(userID uint) (string, error) {
-    secret := []byte(os.Getenv("JWT_SECRET"))
-    expireHours := os.Getenv("JWT_EXPIRE_HOURS")
-    dur, _ := time.ParseDuration(expireHours + "h")
+var jwtKey = []byte("my_secret_key") // In production, load from environment
 
-    claims := jwt.MapClaims{
-        "user_id": userID,
-        "exp":     time.Now().Add(dur).Unix(),
-        "iat":     time.Now().Unix(),
-    }
-    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-    return token.SignedString(secret)
+// GenerateJWT generates a JWT token using the provided subject (e.g., user ID).
+func GenerateJWT(subject string) (string, error) {
+	expirationTime := time.Now().Add(24 * time.Hour)
+	claims := &jwt.RegisteredClaims{
+		ExpiresAt: jwt.NewNumericDate(expirationTime),
+		Subject:   subject,
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(jwtKey)
+	if err != nil {
+		return "", err
+	}
+	return tokenString, nil
 }
 
-// ValidateJWT parses and validates a token, returning userID
-func ValidateJWT(tokenStr string) (uint, error) {
-    secret := []byte(os.Getenv("JWT_SECRET"))
-    token, err := jwt.Parse(tokenStr, func(t *jwt.Token) (interface{}, error) {
-        if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-            return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
-        }
-        return secret, nil
-    })
-    if err != nil || !token.Valid {
-        return 0, fmt.Errorf("invalid token: %v", err)
-    }
-
-    claims := token.Claims.(jwt.MapClaims)
-    uid := uint(claims["user_id"].(float64))
-    return uid, nil
+// ValidateJWT validates the token string and returns the subject if valid.
+func ValidateJWT(tokenString string) (string, error) {
+	claims := &jwt.RegisteredClaims{}
+	_, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return jwtKey, nil
+	})
+	if err != nil {
+		return "", errors.New("invalid token")
+	}
+	return claims.Subject, nil
 }
