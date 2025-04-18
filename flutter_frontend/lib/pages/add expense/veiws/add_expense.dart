@@ -1,124 +1,12 @@
 import 'package:finance_manager_app/models/expense.dart';
-import 'package:finance_manager_app/providers/expense_provider.dart';
+import 'package:finance_manager_app/pages/add%20expense/veiws/dropdownmenu.dart';
+
+import 'package:finance_manager_app/widgets/datepicker.dart';
+import 'package:finance_manager_app/widgets/timepicker.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 
-import 'package:finance_manager_app/providers/auth_providers.dart'; // Ensure filename matches your project
-
-class AddTransaction extends StatefulWidget {
-  const AddTransaction({super.key});
-
-  @override
-  State<AddTransaction> createState() => _AddTransactionState();
-}
-
-class _AddTransactionState extends State<AddTransaction> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  String selectedCategory = "Food"; // Default category
-  String selectedType = "expense";    // "expense" or "income"
-  DateTime selectedDate = DateTime.now();
-
-  void _saveTransaction() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final txnProvider = Provider.of<TransactionProvider>(context, listen: false);
-    if (authProvider.token == null) return;
-
-    Transaction newTxn = Transaction(
-      id: "0", // Actual ID set by backend
-      name: _nameController.text,
-      totalAmount: _amountController.text,
-      date: selectedDate,
-      description: _descriptionController.text,
-      category: selectedCategory,
-      type: selectedType,
-    );
-
-    bool success = await txnProvider.addTransaction(authProvider.token!, newTxn);
-    if (success) {
-      Navigator.pop(context);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(txnProvider.errorMessage ?? "Error saving transaction")),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // Simplified UI for adding a transaction.
-    return Scaffold(
-      appBar: AppBar(title: const Text("Add Transaction")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: "Transaction Name"),
-            ),
-            TextField(
-              controller: _amountController,
-              decoration: const InputDecoration(labelText: "Amount"),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(labelText: "Description"),
-            ),
-            DropdownButton<String>(
-              value: selectedCategory,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedCategory = newValue!;
-                });
-              },
-              items: <String>[
-                "Food",
-                "Shopping",
-                "Entertainment",
-                "Travel",
-                "Medical",
-                "Recharge",
-                "Rent",
-                "Automobile",
-                "Others"
-              ].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-            DropdownButton<String>(
-              value: selectedType,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedType = newValue!;
-                });
-              },
-              items: <String>["expense", "income"].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value.toUpperCase()),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _saveTransaction,
-              child: const Text("Save Transaction"),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-/*
 class AddExpense extends StatefulWidget {
   const AddExpense({super.key});
 
@@ -409,4 +297,3 @@ class _AddExpenseState extends State<AddExpense> {
     );
   }
 }
-*/

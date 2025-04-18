@@ -1,90 +1,16 @@
+import 'package:finance_manager_app/data/mydata.dart';
 import 'package:finance_manager_app/models/expense.dart';
-import 'package:finance_manager_app/providers/expense_provider.dart';
+import 'package:finance_manager_app/pages/Home/componants/balancecard.dart';
+import 'package:finance_manager_app/pages/all%20Expenses/allExpense.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:finance_manager_app/providers/auth_providers.dart'; // Make sure this matches your file name.
+
 import 'package:hexcolor/hexcolor.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
-
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-  @override
-  void initState() {
-    super.initState();
-    // Defer fetch until after build completes.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final txnProvider = Provider.of<TransactionProvider>(context, listen: false);
-      if (authProvider.token != null) {
-        txnProvider.fetchTransactions(authProvider.token!);
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final txnProvider = Provider.of<TransactionProvider>(context);
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Your Transactions",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(height: 20),
-            txnProvider.loading
-                ? const Center(child: CircularProgressIndicator())
-                : Expanded(
-                    child: ListView.builder(
-                      itemCount: txnProvider.transactions.length,
-                      itemBuilder: (context, index) {
-                        Transaction txn = txnProvider.transactions[index];
-                        return Card(
-                          color: HexColor("34394b"),
-                          margin: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: ListTile(
-                            title: Text(txn.name,
-                                style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.bold)),
-                            subtitle: Text(
-                              txn.description,
-                              style: TextStyle(
-                                  color: Theme.of(context).colorScheme.outline),
-                            ),
-                            trailing: Text(txn.totalAmount,
-                                style: TextStyle(
-                                    color: Theme.of(context).colorScheme.primary,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600)),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 
-
-/*
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -293,4 +219,3 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 }
-*/

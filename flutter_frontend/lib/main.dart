@@ -1,7 +1,6 @@
 
 import 'package:finance_manager_app/pages/Login%20page/loginpage.dart';
-import 'package:finance_manager_app/providers/auth_providers.dart';
-import 'package:finance_manager_app/providers/expense_provider.dart';
+
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
@@ -12,8 +11,8 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => TransactionProvider()),
+        //ChangeNotifierProvider(create: (_) => AuthProvider()),
+        //ChangeNotifierProvider(create: (_) => TransactionProvider()),
         // Add other providers here if needed
       ],
       child: MyApp(),

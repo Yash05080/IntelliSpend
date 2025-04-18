@@ -1,10 +1,10 @@
 
 
 import 'package:finance_manager_app/pages/Home/veiws/HomePage.dart';
-import 'package:finance_manager_app/pages/Login%20page/authservice.dart';
 import 'package:finance_manager_app/pages/Login%20page/otpscreen.dart';
+
 import 'package:finance_manager_app/pages/Login%20page/register.dart';
-import 'package:finance_manager_app/providers/auth_providers.dart';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,127 +14,127 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
-class AuthScreen extends StatefulWidget {
-  const AuthScreen({Key? key}) : super(key: key);
+// class AuthScreen extends StatefulWidget {
+//   const AuthScreen({Key? key}) : super(key: key);
 
-  @override
-  State<AuthScreen> createState() => _AuthScreenState();
-}
+//   @override
+//   State<AuthScreen> createState() => _AuthScreenState();
+// }
 
-class _AuthScreenState extends State<AuthScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _obscureText = true;
+// class _AuthScreenState extends State<AuthScreen> {
+//   final TextEditingController _emailController = TextEditingController();
+//   final TextEditingController _passwordController = TextEditingController();
+//   bool _obscureText = true;
 
-  void _toggleVisibility() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
-  }
+//   void _toggleVisibility() {
+//     setState(() {
+//       _obscureText = !_obscureText;
+//     });
+//   }
 
-  void _login() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    bool success = await authProvider.login(
-        _emailController.text.trim(), _passwordController.text.trim());
-    if (success) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => MyHomePage()),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(authProvider.errorMessage ?? "Login failed")));
-    }
-  }
+//   void _login() async {
 
-  @override
-  Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-    return Scaffold(
-      backgroundColor: Colors.blueGrey[900],
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Welcome Back",
-                  style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white)),
-              const SizedBox(height: 10),
-              Text("Login to your account",
-                  style: TextStyle(fontSize: 16, color: Colors.white70)),
-              const SizedBox(height: 30),
-              TextField(
-                controller: _emailController,
-                style: TextStyle(color: Colors.amber),
-                decoration: InputDecoration(
-                  hintText: "Email",
-                  hintStyle: TextStyle(color: Colors.grey[400]),
-                  prefixIcon: Icon(Icons.email, color: Colors.amber),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-              ),
-              const SizedBox(height: 15),
-              TextField(
-                controller: _passwordController,
-                obscureText: _obscureText,
-                style: TextStyle(color: Colors.amber),
-                decoration: InputDecoration(
-                  hintText: "Password",
-                  hintStyle: TextStyle(color: Colors.grey[400]),
-                  prefixIcon: Icon(Icons.lock, color: Colors.amber),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                        _obscureText ? Icons.visibility : Icons.visibility_off,
-                        color: Colors.amber),
-                    onPressed: _toggleVisibility,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: authProvider.loading ? null : _login,
-                  child: authProvider.loading
-                      ? CircularProgressIndicator()
-                      : Text("Login"),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Don't have an account? ",
-                      style: TextStyle(color: Colors.white)),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RegisterPage()));
-                    },
-                    child: Text("Register",
-                        style: TextStyle(
-                            color: Colors.amber, fontWeight: FontWeight.bold)),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+//     bool success = await authProvider.login(
+//         _emailController.text.trim(), _passwordController.text.trim());
+//     if (success) {
+//       Navigator.pushReplacement(
+//         context,
+//         MaterialPageRoute(builder: (_) => MyHomePage()),
+//       );
+//     } else {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//           SnackBar(content: Text(authProvider.errorMessage ?? "Login failed")));
+//     }
+//   }
 
-/*
+//   @override
+//   Widget build(BuildContext context) {
+//     final authProvider = Provider.of<AuthProvider>(context);
+//     return Scaffold(
+//       backgroundColor: Colors.blueGrey[900],
+//       body: Center(
+//         child: SingleChildScrollView(
+//           padding: const EdgeInsets.symmetric(horizontal: 24.0),
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: [
+//               Text("Welcome Back",
+//                   style: TextStyle(
+//                       fontSize: 28,
+//                       fontWeight: FontWeight.bold,
+//                       color: Colors.white)),
+//               const SizedBox(height: 10),
+//               Text("Login to your account",
+//                   style: TextStyle(fontSize: 16, color: Colors.white70)),
+//               const SizedBox(height: 30),
+//               TextField(
+//                 controller: _emailController,
+//                 style: TextStyle(color: Colors.amber),
+//                 decoration: InputDecoration(
+//                   hintText: "Email",
+//                   hintStyle: TextStyle(color: Colors.grey[400]),
+//                   prefixIcon: Icon(Icons.email, color: Colors.amber),
+//                   border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(12)),
+//                 ),
+//               ),
+//               const SizedBox(height: 15),
+//               TextField(
+//                 controller: _passwordController,
+//                 obscureText: _obscureText,
+//                 style: TextStyle(color: Colors.amber),
+//                 decoration: InputDecoration(
+//                   hintText: "Password",
+//                   hintStyle: TextStyle(color: Colors.grey[400]),
+//                   prefixIcon: Icon(Icons.lock, color: Colors.amber),
+//                   border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(12)),
+//                   suffixIcon: IconButton(
+//                     icon: Icon(
+//                         _obscureText ? Icons.visibility : Icons.visibility_off,
+//                         color: Colors.amber),
+//                     onPressed: _toggleVisibility,
+//                   ),
+//                 ),
+//               ),
+//               const SizedBox(height: 20),
+//               SizedBox(
+//                 width: double.infinity,
+//                 child: ElevatedButton(
+//                   onPressed: authProvider.loading ? null : _login,
+//                   child: authProvider.loading
+//                       ? CircularProgressIndicator()
+//                       : Text("Login"),
+//                 ),
+//               ),
+//               const SizedBox(height: 20),
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: [
+//                   Text("Don't have an account? ",
+//                       style: TextStyle(color: Colors.white)),
+//                   GestureDetector(
+//                     onTap: () {
+//                       Navigator.push(
+//                           context,
+//                           MaterialPageRoute(
+//                               builder: (context) => RegisterPage()));
+//                     },
+//                     child: Text("Register",
+//                         style: TextStyle(
+//                             color: Colors.amber, fontWeight: FontWeight.bold)),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
@@ -161,7 +161,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final AuthService _authService = AuthService();
+
 
   @override
   Widget build(BuildContext context) {
@@ -365,4 +365,3 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 }
-*/
