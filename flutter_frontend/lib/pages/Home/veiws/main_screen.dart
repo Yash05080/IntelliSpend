@@ -19,9 +19,22 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-   final TransactionService _transactionService = TransactionService();
+  final TransactionService _transactionService = TransactionService();
   List<Map<String, dynamic>> _transactions = [];
   bool _isLoading = true;
+
+  Icon _getActionIcon(String? action) {
+    switch (action) {
+      case 'credit':
+        return const Icon(Icons.arrow_downward, color: Colors.green);
+      case 'debit':
+        return const Icon(Icons.arrow_upward, color: Colors.red);
+      case 'update':
+        return const Icon(Icons.sync, color: Colors.amber);
+      default:
+        return const Icon(Icons.help_outline);
+    }
+  }
 
   @override
   void initState() {
@@ -45,68 +58,66 @@ class _MainScreenState extends State<MainScreen> {
       );
     }
   }
-  
 
 // log out option temparory
   void _showSettingsDialog() {
-  showDialog(
-    context: context,
-    barrierColor: Colors.black.withOpacity(0.3), // dim background
-    builder: (BuildContext context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.2),
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.3), // dim background
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.2),
+                  ),
                 ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "Settings",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Settings",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      await Supabase.instance.client.auth.signOut();
-                      if (context.mounted) Navigator.pop(context);
-                    },
-                    icon: Icon(Icons.logout, color: Colors.redAccent),
-                    label: Text("Log Out"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red.withOpacity(0.8),
-                      foregroundColor: Colors.white,
+                    const SizedBox(height: 20),
+                    ElevatedButton.icon(
+                      onPressed: () async {
+                        await Supabase.instance.client.auth.signOut();
+                        if (context.mounted) Navigator.pop(context);
+                      },
+                      icon: Icon(Icons.logout, color: Colors.redAccent),
+                      label: Text("Log Out"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red.withOpacity(0.8),
+                        foregroundColor: Colors.white,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
   @override
-  
   Widget build(BuildContext context) {
     final provider = context.watch<TransactionProvider>();
-final txList  = provider.transactions;
+    final txList = provider.transactions;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
@@ -159,7 +170,7 @@ final txList  = provider.transactions;
                 Align(
                   alignment: Alignment.centerRight,
                   child: IconButton(
-                    onPressed:  _showSettingsDialog,
+                    onPressed: _showSettingsDialog,
                     icon: Icon(
                       Icons.settings,
                       color: Theme.of(context).colorScheme.onSurface,
@@ -222,76 +233,93 @@ final txList  = provider.transactions;
             //transactions list
 
             Expanded(
-              child: ListView.builder(
-                itemCount: transactionsData.length,
-                itemBuilder: (context, int i) {
-                  var categoryDetails =
-                      getCategoryDetails(transactionsData[i]['category']);
+              child: FutureBuilder(
+                future: Supabase.instance.client
+                    .from('balance')
+                    .select()
+                    .eq('user_id',
+                        Supabase.instance.client.auth.currentUser!.id)
+                    .order('created_at', ascending: false),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError || !snapshot.hasData) {
+                    return const Center(
+                        child: Text("Error loading balance entries"));
+                  }
 
-                  return Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 25.0, left: 5, right: 5),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: HexColor("34394b"),
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Stack(alignment: Alignment.center, children: [
-                                  Container(
-                                    height: 60,
-                                    width: 60,
-                                    decoration: BoxDecoration(
-                                      color: categoryDetails['color'],
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  Center(child: categoryDetails['icon'])
-                                ]),
-                                const SizedBox(width: 10),
-                                Text(
-                                  transactionsData[i]['name'],
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface),
-                                ),
-                              ],
+                  final entries = snapshot.data as List<dynamic>;
+
+                  return ListView.builder(
+                    itemCount: entries.length,
+                    itemBuilder: (context, i) {
+                      final entry = entries[i];
+                      if (entry == null || entry is! Map<String, dynamic>) {
+                        return const SizedBox();
+                      }
+
+                      final amount = entry['amount'] ?? 0;
+                      final action = (entry['type'] ?? 'update') as String;
+                      final date =
+                          DateTime.parse(entry['created_at']).toLocal();
+                      final icon = _getActionIcon(action);
+                      final isCredit = action == 'credit';
+
+                      return Card(
+                        color: HexColor(
+                            "1f2333"), // slightly lighter than background for contrast
+                        elevation: 2,
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          leading: CircleAvatar(
+                            radius: 24,
+                            backgroundColor: isCredit
+                                ? HexColor("F2C341").withOpacity(0.2)
+                                : HexColor("f3696e").withOpacity(0.2),
+                            child: icon,
+                          ),
+                          title: Text(
+                            "₹$amount",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: HexColor("FFFFFF"), // onSurface
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  transactionsData[i]['totalamount'],
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 18,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${action[0].toUpperCase()}${action.substring(1)}",
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                  color:
+                                      HexColor("f1a410"), // outline (subtext)
                                 ),
-                                Text(
-                                  transactionsData[i]['date'],
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.blueGrey[300],
-                                  ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                "${date.day}/${date.month}/${date.year}   ${date.hour}:${date.minute.toString().padLeft(2, '0')}",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[500],
                                 ),
-                              ],
-                            )
-                          ],
+                              ),
+                            ],
+                          ),
+                          trailing: Icon(
+                            Icons.chevron_right,
+                            color: Colors.grey[400],
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   );
                 },
               ),

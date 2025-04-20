@@ -220,7 +220,7 @@ class _AllExpenseState extends State<AllExpense> {
                                     child: categoryDetails['icon'],
                                   ),
                                   title: Text(
-                                    expense['title'] ?? 'Expense',
+                                    expense['description'] ?? 'Expense',
                                     style: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -256,7 +256,7 @@ class _AllExpenseState extends State<AllExpense> {
                                       ),
                                       const SizedBox(height: 5),
                                       Text(
-                                        expense['description'] ?? '',
+                                        expense['title'] ?? 'Expense',
                                         style: TextStyle(
                                           color: Colors.blueGrey[200],
                                           fontSize: 13,
