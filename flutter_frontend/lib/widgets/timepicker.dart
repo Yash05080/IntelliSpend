@@ -17,6 +17,29 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: _selectedTime,
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogBackgroundColor:
+                const Color(0xFF34394B), // 🎯 Custom background color
+            colorScheme: ColorScheme.dark(
+              primary: Theme.of(context).colorScheme.secondary, // Header color
+              onPrimary: Colors.white, // Header text color
+              surface: const Color(0xFF34394B), // Calendar background
+              onSurface: Colors.white, // Text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                textStyle: TextStyle(fontWeight: FontWeight.w800),
+                foregroundColor: Theme.of(context)
+                    .colorScheme
+                    .tertiary, // Button text color (e.g., CANCEL, OK)
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != _selectedTime) {
       setState(() {
@@ -28,7 +51,8 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
 
   String getFormattedTime() {
     final now = DateTime.now();
-    final dt = DateTime(now.year, now.month, now.day, _selectedTime.hour, _selectedTime.minute);
+    final dt = DateTime(
+        now.year, now.month, now.day, _selectedTime.hour, _selectedTime.minute);
     return DateFormat('hh:mm a').format(dt);
   }
 

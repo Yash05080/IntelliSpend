@@ -19,6 +19,29 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
       initialDate: _selectedDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogBackgroundColor:
+                const Color(0xFF34394B), // 🎯 Custom background color
+            colorScheme: ColorScheme.dark(
+              primary: Theme.of(context).colorScheme.secondary, // Header color
+              onPrimary: Colors.white, // Header text color
+              surface: const Color(0xFF34394B), // Calendar background
+              onSurface: Colors.white, // Text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                textStyle: TextStyle(fontWeight: FontWeight.w800),
+                foregroundColor: Theme.of(context)
+                    .colorScheme
+                    .tertiary, // Button text color (e.g., CANCEL, OK)
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
