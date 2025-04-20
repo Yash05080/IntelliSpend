@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:finance_manager_app/pages/loginpage/authpage.dart';
+import 'package:finance_manager_app/services/authgate.dart';
 import 'package:finance_manager_app/services/authservice.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -19,27 +20,38 @@ class _RegisterPageState extends State<RegisterPage> {
   final authservice = Authservice();
 
   void signUp() async {
-    final email = _usernameController.text;
-    final password = _passwordController.text;
-    final confirm = _confirmpasswordController.text;
+  final email = _usernameController.text.trim();
+  final password = _passwordController.text;
+  final confirm = _confirmpasswordController.text;
 
-    if (password != confirm) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Passwords don't match")));
-      return;
-    }
+  if (password != confirm) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Passwords don't match")));
+    return;
+  }
 
-    try {
-      final res = await authservice.signupwithEmailandPassword(email, password);
+  try {
+    final res = await authservice.signupwithEmailandPassword(email, password);
 
-      // Show confirmation popup if signup successful
-    } catch (e) {
+    if (res.user != null) {
+      
+      await Future.delayed(Duration(milliseconds: 500));
+      
+      
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Error: $e")));
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const AuthGate()),
+        );
       }
     }
+  } catch (e) {
+    if (mounted) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Error: $e",style: TextStyle(color: Colors.red),)));
+    }
   }
+}
+
 
   @override
   void dispose() {

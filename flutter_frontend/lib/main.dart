@@ -1,28 +1,32 @@
-
 import 'dart:async';
 
 import 'package:finance_manager_app/services/authgate.dart';
-
-
 
 import 'package:flutter/material.dart';
 
 import 'package:hexcolor/hexcolor.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:finance_manager_app/pages/loginpage/authpage.dart';
 
-  await Supabase.initialize(
-    url: "https://iocaalxfpskzwcoudzyy.supabase.co",
-    anonKey:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlvY2FhbHhmcHNrendjb3Vkenl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUwNDI4MzUsImV4cCI6MjA2MDYxODgzNX0.7eiPNbZbmk9BMWyNbQfqSknc82wwzyEYBE5U-QEMHaA",
-  );
+Future<void> main() async {
+  // Make sure ensureInitialized is *inside* the zone
+  return runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  runZonedGuarded(() {
+    await Supabase.initialize(
+      url: "https://iocaalxfpskzwcoudzyy.supabase.co",
+      anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlvY2FhbHhmcHNrendjb3Vkenl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUwNDI4MzUsImV4cCI6MjA2MDYxODgzNX0.7eiPNbZbmk9BMWyNbQfqSknc82wwzyEYBE5U-QEMHaA",
+    );
+
     runApp(const MyApp());
   }, (error, stackTrace) {
-    print("Caught error: $error");
+    // now you’ll catch everything properly
+    print("Uncaught error: $error");
+    print(stackTrace);
   });
 }
 
