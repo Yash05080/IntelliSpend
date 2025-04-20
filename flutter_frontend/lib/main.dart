@@ -7,10 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:finance_manager_app/pages/loginpage/authpage.dart';
+
 
 Future<void> main() async {
   // Make sure ensureInitialized is *inside* the zone

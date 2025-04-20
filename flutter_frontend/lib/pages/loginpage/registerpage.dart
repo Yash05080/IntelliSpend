@@ -26,7 +26,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   if (password != confirm) {
     ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Passwords don't match")));
+        const SnackBar(content: Text("Passwords don't match")));
     return;
   }
 
@@ -35,7 +35,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     if (res.user != null) {
       
-      await Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 500));
       
       
       if (mounted) {
@@ -47,7 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
   } catch (e) {
     if (mounted) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Error: $e",style: TextStyle(color: Colors.red),)));
+          .showSnackBar(SnackBar(content: Text("Error: $e",style: const TextStyle(color: Colors.red),)));
     }
   }
 }
@@ -68,7 +68,7 @@ class _RegisterPageState extends State<RegisterPage> {
       Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             color: Colors.black,
             image: DecorationImage(
               image: AssetImage("assets/backgrounds/login.jpg"),
@@ -80,24 +80,24 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Center(
               child: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           //brand name
-          Text(
+          const Text(
             "IntelliSpend",
             style: TextStyle(fontSize: 40, color: Colors.red),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
 
           //welcome text
-          Text(
+          const Text(
             "Bonjour Patron",
             style: TextStyle(fontSize: 20, color: Colors.white70),
           ),
-          SizedBox(
+          const SizedBox(
             height: 40,
           ),
 
@@ -123,12 +123,12 @@ class _RegisterPageState extends State<RegisterPage> {
                           color: HexColor("C00000"),
                         ),
                         hintText: "username",
-                        hintStyle: TextStyle(color: Colors.grey),
+                        hintStyle: const TextStyle(color: Colors.grey),
                         border: InputBorder.none),
                   ),
                 )),
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
 
@@ -151,7 +151,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     cursorErrorColor: Colors.red,
                     decoration: InputDecoration(
                       hintText: "password",
-                      hintStyle: TextStyle(color: Colors.grey),
+                      hintStyle: const TextStyle(color: Colors.grey),
                       border: InputBorder.none,
                       suffixIcon: Icon(
                         Icons.lock,
@@ -162,7 +162,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 )),
           ),
 
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
 
@@ -183,7 +183,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     cursorErrorColor: Colors.red,
                     decoration: InputDecoration(
                       hintText: "confirm password",
-                      hintStyle: TextStyle(color: Colors.grey),
+                      hintStyle: const TextStyle(color: Colors.grey),
                       border: InputBorder.none,
                       suffixIcon: Icon(
                         Icons.lock_reset,
@@ -194,7 +194,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 )),
           ),
 
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
 
@@ -233,7 +233,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       signUp();
                       // Handle sign in button press
                     },
-                    child: Text(
+                    child: const Text(
                       'create account',
                       style: TextStyle(
                         fontSize: 18,
@@ -245,7 +245,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
 
@@ -256,10 +256,10 @@ class _RegisterPageState extends State<RegisterPage> {
           InkWell(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LoginPage()));
+                  MaterialPageRoute(builder: (context) => const LoginPage()));
             },
             child: RichText(
-              text: TextSpan(children: <TextSpan>[
+              text: const TextSpan(children: <TextSpan>[
                 TextSpan(text: "Already have an account? "),
                 TextSpan(
                     text: "Sign In Now", style: TextStyle(color: Colors.red))

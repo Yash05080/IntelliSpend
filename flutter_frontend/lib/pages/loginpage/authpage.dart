@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
       Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             color: Colors.black,
             image: DecorationImage(
               image: AssetImage("assets/backgrounds/login.jpg"),
@@ -67,24 +67,24 @@ class _LoginPageState extends State<LoginPage> {
           child: Center(
               child: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           //brand name
-          Text(
+          const Text(
             "IntelliSpend",
             style: TextStyle(fontSize: 40, color: Colors.red),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
 
           //welcome text
-          Text(
+          const Text(
             "Welcome again",
             style: TextStyle(fontSize: 20, color: Colors.white70),
           ),
-          SizedBox(
+          const SizedBox(
             height: 40,
           ),
 
@@ -110,12 +110,12 @@ class _LoginPageState extends State<LoginPage> {
                           color: HexColor("C00000"),
                         ),
                         hintText: "username",
-                        hintStyle: TextStyle(color: Colors.grey),
+                        hintStyle: const TextStyle(color: Colors.grey),
                         border: InputBorder.none),
                   ),
                 )),
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
 
@@ -139,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                     obscureText: _obscureText,
                     decoration: InputDecoration(
                       hintText: "password",
-                      hintStyle: TextStyle(color: Colors.grey),
+                      hintStyle: const TextStyle(color: Colors.grey),
                       border: InputBorder.none,
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -155,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                 )),
           ),
 
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
 
@@ -194,7 +194,7 @@ class _LoginPageState extends State<LoginPage> {
                       login();
                       // Handle sign in button press
                     },
-                    child: Text(
+                    child: const Text(
                       'Sign In',
                       style: TextStyle(
                         fontSize: 18,
@@ -206,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
 
@@ -216,12 +216,12 @@ class _LoginPageState extends State<LoginPage> {
             onTap: () {
               //forget pass function
             },
-            child: Text(
+            child: const Text(
               "forgot password?",
               style: TextStyle(color: Colors.lightBlue),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
 
@@ -230,10 +230,10 @@ class _LoginPageState extends State<LoginPage> {
           InkWell(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => RegisterPage()));
+                  MaterialPageRoute(builder: (context) => const RegisterPage()));
             },
             child: RichText(
-              text: TextSpan(children: <TextSpan>[
+              text: const TextSpan(children: <TextSpan>[
                 TextSpan(text: "Don't have an account? "),
                 TextSpan(
                     text: "Sign Up Now",
