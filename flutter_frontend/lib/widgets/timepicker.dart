@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // For time formatting
+import 'package:intl/intl.dart';
 
 class TimePickerWidget extends StatefulWidget {
-  const TimePickerWidget({super.key});
+  final ValueChanged<TimeOfDay>? onTimeSelected;
+
+  const TimePickerWidget({super.key, this.onTimeSelected});
 
   @override
-  // ignore: library_private_types_in_public_api
   _TimePickerWidgetState createState() => _TimePickerWidgetState();
 }
 
 class _TimePickerWidgetState extends State<TimePickerWidget> {
-  TimeOfDay _selectedTime = TimeOfDay.now(); // Initial time set to current time
+  TimeOfDay _selectedTime = TimeOfDay.now();
 
-  // Function to pick the time
   Future<void> _pickTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -22,14 +22,14 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
       setState(() {
         _selectedTime = picked;
       });
+      widget.onTimeSelected?.call(picked); // 🔥 Callback to parent
     }
   }
 
-  // Formatting the selected time for display
   String getFormattedTime() {
     final now = DateTime.now();
     final dt = DateTime(now.year, now.month, now.day, _selectedTime.hour, _selectedTime.minute);
-    return DateFormat('hh:mm a').format(dt); // 12-hour format with AM/PM
+    return DateFormat('hh:mm a').format(dt);
   }
 
   @override
@@ -61,7 +61,7 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
               getFormattedTime(),
               style: const TextStyle(fontSize: 18),
             ),
-            const SizedBox(width: 10,),
+            const SizedBox(width: 10),
             const Icon(Icons.access_time),
           ],
         ),

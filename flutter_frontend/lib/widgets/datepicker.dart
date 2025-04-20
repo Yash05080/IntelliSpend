@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // For date formatting
+import 'package:intl/intl.dart';
 
 class DatePickerWidget extends StatefulWidget {
-  const DatePickerWidget({super.key});
+  final ValueChanged<DateTime>? onDateSelected;
+
+  const DatePickerWidget({super.key, this.onDateSelected});
 
   @override
-  // ignore: library_private_types_in_public_api
   _DatePickerWidgetState createState() => _DatePickerWidgetState();
 }
 
 class _DatePickerWidgetState extends State<DatePickerWidget> {
-  DateTime _selectedDate = DateTime.now(); // Initial date set to today's date
+  DateTime _selectedDate = DateTime.now();
 
-  // Function to pick the date
   Future<void> _pickDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
-      firstDate: DateTime(2000),  // Earliest selectable date
-      lastDate: DateTime(2101),   // Latest selectable date
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
       });
+      widget.onDateSelected?.call(picked); // 🔥 Callback to parent
     }
   }
 
-  // Formatting the selected date for display
   String getFormattedDate() {
     return DateFormat('yyyy-MM-dd').format(_selectedDate);
   }
@@ -58,10 +58,10 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '${getFormattedDate()}',
+              getFormattedDate(),
               style: const TextStyle(fontSize: 18),
             ),
-            const SizedBox(width: 10,),
+            const SizedBox(width: 10),
             const Icon(Icons.calendar_today),
           ],
         ),

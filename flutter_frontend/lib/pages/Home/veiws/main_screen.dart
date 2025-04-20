@@ -3,9 +3,12 @@ import 'dart:ui';
 import 'package:finance_manager_app/data/mydata.dart';
 import 'package:finance_manager_app/pages/Home/veiws/componants/balancecard.dart';
 import 'package:finance_manager_app/pages/all%20Expenses/allExpense.dart';
+import 'package:finance_manager_app/providers/transaction_provider.dart';
+import 'package:finance_manager_app/services/transaction_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MainScreen extends StatefulWidget {
@@ -16,7 +19,35 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+   final TransactionService _transactionService = TransactionService();
+  List<Map<String, dynamic>> _transactions = [];
+  bool _isLoading = true;
 
+  @override
+  void initState() {
+    super.initState();
+    _loadTransactions();
+  }
+
+  Future<void> _loadTransactions() async {
+    try {
+      final data = await _transactionService.fetchTransactions();
+      setState(() {
+        _transactions = data;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error fetching transactions: $e')),
+      );
+    }
+  }
+  
+
+// log out option temparory
   void _showSettingsDialog() {
   showDialog(
     context: context,
@@ -72,7 +103,10 @@ class _MainScreenState extends State<MainScreen> {
 }
 
   @override
+  
   Widget build(BuildContext context) {
+    final provider = context.watch<TransactionProvider>();
+final txList  = provider.transactions;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),

@@ -1,13 +1,13 @@
 import 'dart:async';
 
+import 'package:finance_manager_app/providers/transaction_provider.dart';
 import 'package:finance_manager_app/services/authgate.dart';
 
 import 'package:flutter/material.dart';
 
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-
 
 Future<void> main() async {
   // Make sure ensureInitialized is *inside* the zone
@@ -16,10 +16,14 @@ Future<void> main() async {
 
     await Supabase.initialize(
       url: "https://iocaalxfpskzwcoudzyy.supabase.co",
-      anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlvY2FhbHhmcHNrendjb3Vkenl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUwNDI4MzUsImV4cCI6MjA2MDYxODgzNX0.7eiPNbZbmk9BMWyNbQfqSknc82wwzyEYBE5U-QEMHaA",
+      anonKey:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlvY2FhbHhmcHNrendjb3Vkenl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUwNDI4MzUsImV4cCI6MjA2MDYxODgzNX0.7eiPNbZbmk9BMWyNbQfqSknc82wwzyEYBE5U-QEMHaA",
     );
 
-    runApp(const MyApp());
+    runApp(ChangeNotifierProvider(
+      create: (_) => TransactionProvider()..loadTransactions(),
+      child: const MyApp(),
+    ));
   }, (error, stackTrace) {
     // now you’ll catch everything properly
     print("Uncaught error: $error");

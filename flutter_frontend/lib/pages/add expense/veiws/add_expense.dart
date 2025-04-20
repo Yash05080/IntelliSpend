@@ -1,10 +1,12 @@
 import 'package:finance_manager_app/pages/add%20expense/veiws/dropdownmenu.dart';
+import 'package:finance_manager_app/providers/transaction_provider.dart';
 import 'package:finance_manager_app/widgets/datepicker.dart';
 import 'package:finance_manager_app/widgets/timepicker.dart';
 
 import 'package:flutter/material.dart';
 
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 
 class AddExpense extends StatefulWidget {
   const AddExpense({super.key});
@@ -15,7 +17,70 @@ class AddExpense extends StatefulWidget {
 
 class _AddExpenseState extends State<AddExpense> {
   // ignore: non_constant_identifier_names
-  TextEditingController Amount = TextEditingController();
+
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _noteController = TextEditingController();
+
+  String _selectedCategory = 'Food';
+  DateTime? _selectedDateTime;
+
+  void _showSnackBar(String message, {bool isError = false}) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        message,
+        style: const TextStyle(
+          color: Colors.red, // <-- red text always
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      backgroundColor: isError ? Colors.white : Colors.green[100],
+      behavior: SnackBarBehavior.floating,
+      duration: const Duration(seconds: 2),
+    ),
+  );
+}
+
+
+  void saveExpense() async {
+  try {
+    final amount = double.tryParse(_amountController.text.trim());
+    if (amount == null) {
+      _showSnackBar("Enter a valid amount", isError: true);
+      return;
+    }
+
+    if (_selectedDateTime == null) {
+      _showSnackBar("Please select date and time", isError: true);
+      return;
+    }
+
+    await TransactionProvider()
+        .addTransaction(
+          title: "Expense",
+          amount: amount,
+          category: _selectedCategory,
+          description: _noteController.text.trim(),
+          date: _selectedDateTime!, // It's safe because we checked for null
+        )
+        .then((_) {
+          _showSnackBar("Transaction added successfully");
+          _amountController.clear();
+          _noteController.clear();
+          setState(() {
+            _selectedCategory = 'Food';
+            _selectedDateTime = null;
+          });
+        })
+        .catchError((e) =>
+            _showSnackBar("Failed to add: ${e.toString()}", isError: true));
+  } catch (e) {
+    _showSnackBar("Error: ${e.toString()}", isError: true);
+  }
+}
+
+
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -79,6 +144,7 @@ class _AddExpenseState extends State<AddExpense> {
                   Center(
                     child: TextField(
                       textAlign: TextAlign.center,
+                      controller: _amountController,
                       style: TextStyle(
                         fontSize: 125,
                         fontWeight: FontWeight.bold,
@@ -128,31 +194,34 @@ class _AddExpenseState extends State<AddExpense> {
                     width: 250,
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.background,
-                      borderRadius: BorderRadius.circular(12), // Rounded edges
+                      borderRadius: BorderRadius.circular(12),
                       boxShadow: [
-                        // Dark shadow for the bottom-right
                         BoxShadow(
                           color: Theme.of(context).colorScheme.background,
-                          offset: const Offset(4, 4), // Dark shadow position
+                          offset: const Offset(4, 4),
                           blurRadius: 10,
                           spreadRadius: 1,
                         ),
-                        // Light shadow for the top-left
                         const BoxShadow(
                           color: Color.fromARGB(255, 0, 0, 0),
-                          offset: Offset(-4, -4), // Light shadow position
+                          offset: Offset(-4, -4),
                           blurRadius: 10,
                           spreadRadius: 1,
                         ),
                       ],
                       border: Border.all(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary), // Primary color border
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
-                    child: const Center(
-                        child:
-                            CategoryDropdown()), // Centering the dropdown inside
+                    child: Center(
+                      child: CategoryDropdown(
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedCategory = newValue!;
+                          });
+                        },
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 30),
 
@@ -181,6 +250,7 @@ class _AddExpenseState extends State<AddExpense> {
                       ],
                     ),
                     child: TextField(
+                      controller: _noteController,
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 22,
@@ -220,7 +290,35 @@ class _AddExpenseState extends State<AddExpense> {
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [const DatePickerWidget(), TimePickerWidget()],
+                    children: [
+                      DatePickerWidget(
+                        onDateSelected: (DateTime date) {
+                          setState(() {
+                            _selectedDateTime = DateTime(
+                              date.year,
+                              date.month,
+                              date.day,
+                              _selectedDateTime?.hour ?? 0,
+                              _selectedDateTime?.minute ?? 0,
+                            );
+                          });
+                        },
+                      ),
+                      TimePickerWidget(
+                        onTimeSelected: (TimeOfDay time) {
+                          final now = DateTime.now();
+                          setState(() {
+                            _selectedDateTime = DateTime(
+                              _selectedDateTime?.year ?? now.year,
+                              _selectedDateTime?.month ?? now.month,
+                              _selectedDateTime?.day ?? now.day,
+                              time.hour,
+                              time.minute,
+                            );
+                          });
+                        },
+                      ),
+                    ],
                   ),
 
                   const SizedBox(
@@ -231,9 +329,7 @@ class _AddExpenseState extends State<AddExpense> {
 
                   Center(
                     child: GestureDetector(
-                      onTap: () {
-                        // Add the functionality for the button press
-                      },
+                      onTap: saveExpense,
                       child: Container(
                         width: 200,
                         height: 80,
