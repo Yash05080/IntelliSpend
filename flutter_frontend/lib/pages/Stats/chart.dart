@@ -1,7 +1,11 @@
 import 'dart:math';
 
+import 'package:finance_manager_app/models/expensemodel.dart';
+import 'package:finance_manager_app/services/chart_service.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MyChart extends StatefulWidget {
   const MyChart({super.key});
@@ -11,156 +15,134 @@ class MyChart extends StatefulWidget {
 }
 
 class _MyChartState extends State<MyChart> {
+  List<ExpenseDayData> _data = [];
+  double _maxY = 1;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null) return;
+
+    try {
+      final result = await ChartService().fetchLast7DaysExpenses(userId);
+
+      result.sort((a, b) => a.date.compareTo(b.date)); // sort by date
+
+      final maxExpense = result.map((e) => e.total).fold(0.0, max);
+
+      setState(() {
+        _data = result;
+        _maxY = maxExpense == 0 ? 1 : (maxExpense / 1000).ceilToDouble();
+        _isLoading = false;
+      });
+    } catch (e) {
+      print("Error loading chart data: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BarChart(
-      mainBarData(),
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return AspectRatio(
+      aspectRatio: 1.5,
+      child: BarChart(mainBarData()),
     );
   }
 
   BarChartGroupData makeGroupData(int x, double y) {
+    final theme = Theme.of(context).colorScheme;
+
     return BarChartGroupData(x: x, barRods: [
       BarChartRodData(
-          toY: y,
-          gradient: LinearGradient(
-            colors: [
-              Theme.of(context).colorScheme.tertiary,
-              Theme.of(context).colorScheme.secondary,
-              Theme.of(context).colorScheme.primary,
-            ],
-            transform: const GradientRotation(pi / 36),
-          ),
-          width: 12,
-          backDrawRodData: BackgroundBarChartRodData(
-              color: Colors.grey.shade300, show: true, toY: 5))
+        toY: y / 1000,
+        width: 14,
+        borderRadius: BorderRadius.circular(6),
+        gradient: LinearGradient(
+          colors: [
+            theme.tertiary,
+            theme.secondary,
+            theme.primary,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        backDrawRodData: BackgroundBarChartRodData(
+          show: true,
+          toY: _maxY,
+          color: Colors.grey.shade300,
+        ),
+      ),
     ]);
   }
 
-  List<BarChartGroupData> showingGroups() => List.generate(8, (i) {
-        switch (i) {
-          case 0:
-            return makeGroupData(0, 2);
-          case 1:
-            return makeGroupData(1, 4);
-          case 2:
-            return makeGroupData(2, 3.5);
-          case 3:
-            return makeGroupData(3, 2);
-          case 4:
-            return makeGroupData(4, 5);
-          case 5:
-            return makeGroupData(5, 4.5);
-          case 6:
-            return makeGroupData(6, 3);
-          case 7:
-            return makeGroupData(7, 4);
-
-          default:
-            return throw Error();
-        }
-      });
-
   BarChartData mainBarData() {
     return BarChartData(
+      barGroups: List.generate(_data.length, (i) {
+        return makeGroupData(i, _data[i].total);
+      }),
       titlesData: FlTitlesData(
         show: true,
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
+        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
-              showTitles: true, reservedSize: 38, getTitlesWidget: getTitle),
+            showTitles: true,
+            reservedSize: 36,
+            getTitlesWidget: (value, meta) {
+              final int index = value.toInt();
+              if (index < 0 || index >= _data.length) return const SizedBox();
+              final date = _data[index].date;
+              return SideTitleWidget(
+                axisSide: meta.axisSide,
+                space: 8,
+                child: Text(
+                  DateFormat('dd\nMMM').format(date),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 11,
+                    color: Colors.grey,
+                  ),
+                ),
+              );
+            },
+          ),
         ),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
-              showTitles: true, reservedSize: 50, getTitlesWidget: leftTitles),
+            showTitles: true,
+            reservedSize: 56,
+            interval: 1,
+            getTitlesWidget: (value, meta) {
+              if (value == 0) return const SizedBox();
+              return SideTitleWidget(
+                axisSide: meta.axisSide,
+                space: 8,
+                child: Text(
+                  "₹ ${(value * 1000).toInt()}",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
       borderData: FlBorderData(show: false),
-      gridData: const FlGridData(show: false),
-      barGroups: showingGroups(),
-      
-    );
-    
-  }
-
-  Widget getTitle(double value, TitleMeta meta) {
-    const style = TextStyle(
-        color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold);
-    Widget text;
-
-    switch (value.toInt()) {
-      case 0:
-        text = const Text("01", style: style);
-        break;
-      case 1:
-        text = const Text("02", style: style);
-        break;
-      case 2:
-        text = const Text("03", style: style);
-        break;
-      case 3:
-        text = const Text("04", style: style);
-        break;
-      case 4:
-        text = const Text("05", style: style);
-        break;
-      case 5:
-        text = const Text("06", style: style);
-        break;
-      case 6:
-        text = const Text("07", style: style);
-        break;
-      case 7:
-        text = const Text("08", style: style);
-        break;
-
-      default:
-        text = const Text(
-          " ",
-          style: style,
-        );
-        break;
-    }
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 16,
-      child: text,
-    );
-  }
-
-  Widget leftTitles(double value, TitleMeta meta) {
-    const style = TextStyle(
-      color: Colors.grey,
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
-    String text;
-    if (value == 0) {
-      text = "  ";
-    } else if (value == 1) {
-      text = "₹ 1K";
-    } else if (value == 2) {
-      text = "₹ 2K";
-    } else if (value == 3) {
-      text = "₹ 3K";
-    } else if (value == 4) {
-      text = "₹ 4K";
-    } else if (value == 5) {
-      text = "₹ 5K";
-    } else {
-      return Container();
-    }
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 16,
-      child: Text(
-        text,
-        style: style,
-      ),
+      gridData: FlGridData(show: false),
+      maxY: _maxY,
     );
   }
 }

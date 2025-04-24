@@ -8,6 +8,7 @@ import 'package:finance_manager_app/services/transaction_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -56,6 +57,24 @@ class _MainScreenState extends State<MainScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error fetching transactions: $e')),
       );
+    }
+  }
+
+  String formatDate(String isoDate) {
+    try {
+      final dateTime = DateTime.parse(isoDate);
+      return DateFormat('MMM d, yyyy').format(dateTime);
+    } catch (e) {
+      return "Invalid Date";
+    }
+  }
+
+  String formatTime(String isoDate) {
+    try {
+      final dateTime = DateTime.parse(isoDate);
+      return DateFormat('hh:mm a').format(dateTime);
+    } catch (e) {
+      return "Invalid Time";
     }
   }
 
@@ -116,6 +135,10 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Supabase.instance.client.auth.currentUser;
+    final email = user?.email ?? "User";
+    final initial = email.isNotEmpty ? email[0].toUpperCase() : "U";
+
     final provider = context.watch<TransactionProvider>();
     final txList = provider.transactions;
     return SafeArea(
@@ -133,36 +156,40 @@ class _MainScreenState extends State<MainScreen> {
                       height: 60,
                       width: 60,
                       decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: HexColor("F2C341")),
+                        shape: BoxShape.circle,
+                        color: HexColor("F2C341"),
+                      ),
                       child: Center(
-                          child: Text(
-                        "Y",
-                        style: TextStyle(
+                        child: Text(
+                          initial,
+                          style: TextStyle(
                             color: Theme.of(context).colorScheme.tertiary,
                             fontSize: 25,
-                            fontWeight: FontWeight.bold),
-                      )),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
-                    const SizedBox(
-                      width: 8,
-                    ),
+                    const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "welcome",
+                          "Welcome",
                           style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context).colorScheme.outline),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.outline,
+                          ),
                         ),
                         Text(
-                          "Yash Agarwal",
+                          email,
                           style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.onSurface),
-                        )
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -179,6 +206,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ],
             ),
+
             const SizedBox(
               height: 20,
             ),
@@ -304,13 +332,27 @@ class _MainScreenState extends State<MainScreen> {
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              Text(
-                                "${date.day}/${date.month}/${date.year}   ${date.hour}:${date.minute.toString().padLeft(2, '0')}",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey[500],
-                                ),
-                              ),
+                              Row(
+                                        children: [
+                                          Text(
+                                            formatDate(date.toString()),
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Color.fromARGB(
+                                                  217, 223, 223, 223),
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            formatTime(date.toString()),
+                                            style: TextStyle(
+                                              color: Colors.blueGrey[300],
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                             ],
                           ),
                           trailing: Icon(

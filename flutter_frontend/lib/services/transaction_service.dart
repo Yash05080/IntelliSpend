@@ -2,6 +2,31 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TransactionService {
   final _client = Supabase.instance.client;
+  Future<Map<String, double>> getExpenseByCategory(String userId) async {
+
+  final response = await _client
+      .from('transactions')
+      .select('category, amount')
+      .eq('user_id', userId);
+      
+
+  if (response.isEmpty) return {};
+
+  Map<String, double> categoryTotals = {};
+
+  for (var item in response) {
+    final category = item['category'] as String;
+    final amount = (item['amount'] as num).toDouble();
+
+    if (categoryTotals.containsKey(category)) {
+      categoryTotals[category] = categoryTotals[category]! + amount;
+    } else {
+      categoryTotals[category] = amount;
+    }
+  }
+
+  return categoryTotals;
+}
 
   Future<void> createTransaction({
     required String title,
@@ -21,6 +46,13 @@ class TransactionService {
       'description': description ?? '',
       'date': (date ?? DateTime.now()).toIso8601String(),
     });
+
+    await _client.from('balance').insert({
+    'user_id': userId,
+    'amount': amount,
+    'type': 'debit',
+    'created_at': (date ?? DateTime.now()).toIso8601String(),
+  });
   }
 
   Future<List<Map<String, dynamic>>> fetchTransactions() async {

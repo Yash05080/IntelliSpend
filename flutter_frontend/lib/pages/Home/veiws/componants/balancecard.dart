@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:finance_manager_app/services/balance_service.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -54,6 +55,7 @@ class _BalanceCardState extends State<BalanceCard> {
       _balance = balance;
     });
   }
+
 
   void _showBalanceDialog(BuildContext context) {
   showModalBottomSheet(
