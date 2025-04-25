@@ -1,4 +1,4 @@
-import 'package:finance_manager_app/pages/Stats/piechart.dart';
+import 'package:finance_manager_app/pages/Stats/charts/piechart.dart';
 import 'package:flutter/material.dart';
 import 'package:finance_manager_app/services/transaction_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

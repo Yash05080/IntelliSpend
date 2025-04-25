@@ -70,6 +70,73 @@ class ForecastPoint {
 
 class AnalyticsService {
   final _db = Supabase.instance.client;
+  Future<List<WeekdayExpense>> getSpendingByWeekdayFiltered({
+  required String userId,
+  required DateTime startDate,
+  required DateTime endDate,
+  List<String>? categories,
+}) async {
+  final query = _db
+      .from('transactions')
+      .select('date, amount')
+      .eq('user_id', userId)
+      .gte('date', startDate.toIso8601String())
+      .lte('date', endDate.toIso8601String());
+
+  if (categories != null && categories.isNotEmpty) {
+    query.inFilter('category', categories);
+  }
+
+  final res = await query;
+  final raw = List<Map>.from(res);
+  final Map<int, double> sums = {};
+  for (var tx in raw) {
+    final dt = DateTime.parse(tx['date']);
+    sums[dt.weekday] = (sums[dt.weekday] ?? 0) + (tx['amount'] as num).toDouble();
+  }
+
+  const names = {1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat', 7: 'Sun'};
+  return sums.entries
+      .map((e) => WeekdayExpense(weekday: names[e.key]!, total: e.value))
+      .toList()
+    ..sort((a, b) => names.keys.firstWhere((k) => names[k] == a.weekday)
+        .compareTo(names.keys.firstWhere((k) => names[k] == b.weekday)));
+}
+Future<List<CategoryAverage>> getAverageSpendPerCategoryFiltered({
+  required String userId,
+  required DateTime startDate,
+  required DateTime endDate,
+  List<String>? categories,
+}) async {
+  final query = _db
+      .from('transactions')
+      .select('category, amount')
+      .eq('user_id', userId)
+      .gte('date', startDate.toIso8601String())
+      .lte('date', endDate.toIso8601String());
+
+  if (categories != null && categories.isNotEmpty) {
+    query.inFilter('category', categories);
+  }
+
+  final res = await query;
+  final raw = List<Map>.from(res);
+  final Map<String, List<double>> buckets = {};
+  for (var tx in raw) {
+    final cat = tx['category'];
+    final amt = (tx['amount'] as num).toDouble();
+    buckets.putIfAbsent(cat, () => []).add(amt);
+  }
+
+  return buckets.entries
+      .map((e) => CategoryAverage(
+            category: e.key,
+            average: e.value.reduce((a, b) => a + b) / e.value.length,
+          ))
+      .toList()
+    ..sort((a, b) => b.average.compareTo(a.average));
+}
+
 
   /// 1) Total spending by weekday (Mon…Sun)
   Future<List<WeekdayExpense>> getSpendingByWeekday(String userId) async {
@@ -149,8 +216,9 @@ class AnalyticsService {
   /// 4) 7-day moving average (rolling) over last 30 days
   Future<List<ExpenseDayData>> getMovingAverage(String userId,
       {int windowDays = 7}) async {
-    final raw =
-        await _db.rpc('get_last_30_days_expenses', params: {'user_id': userId});
+    final raw = await Supabase.instance.client
+    .rpc('get_last_7_days_expenses', params: {'user_id': userId});
+
     final days = (raw as List)
         .map((e) => ExpenseDayData(
               date: DateTime.parse(e['date']),
@@ -297,3 +365,4 @@ class AnalyticsService {
     return forecasts;
   }
 }
+

@@ -3,7 +3,10 @@ final List<String> categoryList = [
   'Food',
   'Travel',
   'Shopping',
-  'Bills',
+  'Recharge',
   'Entertainment',
+  'Medical',
+  'Rent',
+  'Automobile',
   'Others',
 ];

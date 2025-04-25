@@ -1,7 +1,11 @@
+import 'package:finance_manager_app/pages/Stats/chartpage.dart';
+import 'package:finance_manager_app/pages/Stats/charts/monthlychart.dart';
+import 'package:finance_manager_app/pages/Stats/charts/weekday.dart';
 import 'package:flutter/material.dart';
-import 'package:finance_manager_app/pages/Stats/chart.dart';       // Bar chart
-import 'package:finance_manager_app/pages/Stats/piechartwidget.dart';
+import 'package:finance_manager_app/pages/Stats/charts/chart.dart';              // Bar chart
+import 'package:finance_manager_app/pages/Stats/charts/piechartwidget.dart';     // Pie chart
 import 'package:hexcolor/hexcolor.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class StatsPage extends StatefulWidget {
   const StatsPage({super.key});
@@ -15,6 +19,7 @@ class _StatsPageState extends State<StatsPage> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final bgLight = HexColor("2a3042"); // lighter shade of #191d2d
+    final uid = Supabase.instance.client.auth.currentUser!.id;
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -43,7 +48,7 @@ class _StatsPageState extends State<StatsPage> {
                 ),
                 child: const Padding(
                   padding: EdgeInsets.fromLTRB(12, 30, 12, 12),
-                  child: MyChart(), // Bar Chart
+                  child: MyChart(),
                 ),
               ),
               const SizedBox(height: 30),
@@ -57,6 +62,30 @@ class _StatsPageState extends State<StatsPage> {
                 ),
                 padding: const EdgeInsets.fromLTRB(12, 30, 12, 12),
                 child: const PieChartWidgetWrapper(),
+              ),
+              const SizedBox(height: 30),
+
+              // 📈 Monthly Trend Line Chart Container
+              GestureDetector(
+                onTap: () {
+  final uid = Supabase.instance.client.auth.currentUser!.id;
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => AnalyticsDetailPage(userId: uid),
+    ),
+  );
+},
+
+                child: Container(
+                  width: screenWidth,
+                  decoration: BoxDecoration(
+                    color: bgLight,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.fromLTRB(12, 30, 12, 12),
+                  child:WeeklyExpenseChart(userId: uid,),
+                ),
               ),
             ],
           ),
