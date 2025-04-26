@@ -30,71 +30,89 @@ class _WeeklyExpenseChartState extends State<WeeklyExpenseChart> {
   }
 
   Future<void> _fetchData() async {
-    setState(() {
-      _isLoading = true;
-    });
+  setState(() {
+    _isLoading = true;
+  });
 
-    try {
-      final now = DateTime.now();
-      final startDate =
-          now.subtract(const Duration(days: 30)); // Get data for past 30 days
-      final endDate = now;
-
-      List<WeekdayExpense> data;
-      if (_selectedCategory == 'All') {
-        data = await analyticsService.getSpendingByWeekdayFiltered(
-          userId: widget.userId,
-          startDate: startDate,
-          endDate: endDate,
-          categories: null,
-        );
-      } else {
-        data = await analyticsService.getSpendingByWeekdayFiltered(
-          userId: widget.userId,
-          startDate: startDate,
-          endDate: endDate,
-          categories: [_selectedCategory],
-        );
-      }
-
-      _processData(data);
-    } catch (e) {
-      debugPrint('Error fetching chart data: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load chart data: $e')),
+  try {
+    final now = DateTime.now();
+    final endDate = now;
+    final startDate = now.subtract(const Duration(days: 6)); // Get data for last 7 days
+    
+    List<WeekdayExpense> data;
+    
+    // Debug print to verify filter selection
+    print('Selected category: $_selectedCategory');
+    
+    if (_selectedCategory == 'All') {
+      // Fetch all categories
+      data = await analyticsService.getSpendingByWeekdayFiltered(
+        userId: widget.userId,
+        startDate: startDate,
+        endDate: endDate,
+        categories: null, // No filter
       );
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
+    } else {
+      // Fetch specific category - make sure we're passing it correctly
+      data = await analyticsService.getSpendingByWeekdayFiltered(
+        userId: widget.userId,
+        startDate: startDate,
+        endDate: endDate,
+        categories: [_selectedCategory], // Single category in array
+      );
+      
+      // Debug print to verify the returned data
+      print('Filtered data received: ${data.length} entries');
     }
+
+    _processData(data, startDate, endDate);
+  } catch (e) {
+    debugPrint('Error fetching chart data: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to load chart data: $e')),
+    );
+  } finally {
+    setState(() {
+      _isLoading = false;
+    });
   }
+}
 
-  void _processData(List<WeekdayExpense> data) {
-  // Map weekday names to indexes
-  final weekdayMap = {
-    'Mon': 0, 'Tue': 1, 'Wed': 2, 'Thu': 3, 'Fri': 4, 'Sat': 5, 'Sun': 6
+void _processData(List<WeekdayExpense> data, DateTime startDate, DateTime endDate) {
+  // Create a list to represent the last 7 days
+  final List<WeeklyExpenseData> last7Days = [];
+  
+  // Map of weekday numbers to names
+  final weekdayNames = {
+    1: 'Mon',
+    2: 'Tue',
+    3: 'Wed',
+    4: 'Thu',
+    5: 'Fri',
+    6: 'Sat',
+    7: 'Sun',
   };
-
-  // Create a list with all weekdays (even ones without data)
-  List<WeeklyExpenseData> allWeekdays = [];
-  for (var entry in weekdayMap.entries) {
-    // Find the data for this weekday or use 0 if not found
-    WeekdayExpense? weekdayData = data.firstWhere(
-      (e) => e.weekday == entry.key,
-      orElse: () => WeekdayExpense(weekday: entry.key, total: 0),
+  
+  // Populate the last 7 days
+  for (int i = 6; i >= 0; i--) {
+    final date = endDate.subtract(Duration(days: i));
+    final weekdayName = weekdayNames[date.weekday]!;
+    
+    // Find if there's expense data for this day
+    final expenseData = data.firstWhere(
+      (e) => e.weekday == weekdayName,
+      orElse: () => WeekdayExpense(weekday: weekdayName, total: 0),
     );
     
-    allWeekdays.add(WeeklyExpenseData(
-      weekdayIndex: entry.value,
-      weekday: entry.key,
-      amount: weekdayData.total,
+    last7Days.add(WeeklyExpenseData(
+      weekdayIndex: 6 - i, // Index from 0-6, with today (i=0) having index 6
+      weekday: weekdayName,
+      amount: expenseData.total,
+      date: date,
     ));
   }
   
-  // Sort by weekday index
-  allWeekdays.sort((a, b) => a.weekdayIndex.compareTo(b.weekdayIndex));
-  _weeklyData = allWeekdays;
+  _weeklyData = last7Days;
   
   // Create spots for the chart
   _spots = _weeklyData
@@ -103,7 +121,8 @@ class _WeeklyExpenseChartState extends State<WeeklyExpenseChart> {
 
   // Find the maximum Y value for the chart scale
   if (_spots.isNotEmpty) {
-    _maxY = _spots.map((spot) => spot.y).reduce((max, y) => y > max ? y : max) * 1.2;
+    double maxAmount = _spots.map((spot) => spot.y).reduce((max, y) => y > max ? y : max);
+    _maxY = maxAmount * 1.2;
     _maxY = _maxY < 100 ? 100 : _maxY; // Set minimum scale
   } else {
     _maxY = 100; // Default scale if no data
@@ -111,13 +130,15 @@ class _WeeklyExpenseChartState extends State<WeeklyExpenseChart> {
 }
 
   void _onCategoryChanged(String? newCategory) {
-    if (newCategory != null && newCategory != _selectedCategory) {
-      setState(() {
-        _selectedCategory = newCategory;
-      });
-      _fetchData();
-    }
+  if (newCategory != null && newCategory != _selectedCategory) {
+    setState(() {
+      _selectedCategory = newCategory;
+      print('Category changed to: $newCategory'); // Debug print
+    });
+    // Explicitly call fetchData to refresh with the new filter
+    _fetchData();
   }
+}
 
   @override
 Widget build(BuildContext context) {
@@ -375,11 +396,14 @@ class WeeklyExpenseData {
   final int weekdayIndex;
   final String weekday;
   final double amount;
+  final DateTime date;
 
-  WeeklyExpenseData(
-      {required this.weekdayIndex,
-      required this.weekday,
-      required this.amount});
+  WeeklyExpenseData({
+    required this.weekdayIndex, 
+    required this.weekday, 
+    required this.amount,
+    required this.date,
+  });
 }
 
 // Main page that hosts the chart

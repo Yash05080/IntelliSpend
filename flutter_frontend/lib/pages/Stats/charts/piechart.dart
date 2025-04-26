@@ -74,7 +74,9 @@ class _PieChartWidgetState extends State<PieChartWidget> {
         Container(
           height: 280,
           decoration: BoxDecoration(
-            color: const Color(0xFF232842), // softer navy background
+            color: Theme.of(context)
+                .colorScheme
+                .background, // softer navy background
             borderRadius: BorderRadius.circular(16),
           ),
           child: PieChart(

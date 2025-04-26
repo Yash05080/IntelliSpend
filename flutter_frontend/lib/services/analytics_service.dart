@@ -70,26 +70,41 @@ class ForecastPoint {
 
 class AnalyticsService {
   final _db = Supabase.instance.client;
-  Future<List<WeekdayExpense>> getSpendingByWeekdayFiltered({
+ Future<List<WeekdayExpense>> getSpendingByWeekdayFiltered({
   required String userId,
   required DateTime startDate,
   required DateTime endDate,
   List<String>? categories,
 }) async {
-  final query = _db
+  // Debug prints to track execution
+  print('Fetching filtered spending data');
+  print('Categories filter: $categories');
+  
+  // Start building the query
+  var query = _db
       .from('transactions')
-      .select('date, amount')
+      .select('date, amount, category')
       .eq('user_id', userId)
       .gte('date', startDate.toIso8601String())
       .lte('date', endDate.toIso8601String());
 
+  // Add category filter if specified
   if (categories != null && categories.isNotEmpty) {
-    query.inFilter('category', categories);
+    // Note: Make sure inFilter works as expected with your Supabase setup
+    // For a single category, we can use eq instead to be safe
+    if (categories.length == 1) {
+      query = query.eq('category', categories[0]);
+    } else {
+      query = query.inFilter('category', categories);
+    }
   }
 
   final res = await query;
-  final raw = List<Map>.from(res);
+  print('Raw response: $res'); // Debug what came back
+  
+  final raw = List<Map<String, dynamic>>.from(res);
   final Map<int, double> sums = {};
+  
   for (var tx in raw) {
     final dt = DateTime.parse(tx['date']);
     sums[dt.weekday] = (sums[dt.weekday] ?? 0) + (tx['amount'] as num).toDouble();
