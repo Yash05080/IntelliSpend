@@ -200,7 +200,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                     // Category Analysis
                     _buildSectionHeader("Category Analysis"),
                     _buildCategoryAnalysisSection(),
-                    const SizedBox(height: 24),
+                    //const SizedBox(height: 14),
                     
                     // Recent Activity & Insights
                     _buildSectionHeader("Insights & Anomalies"),
