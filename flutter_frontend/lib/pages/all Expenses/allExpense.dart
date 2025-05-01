@@ -1,6 +1,7 @@
 // ignore: file_names
 import 'package:finance_manager_app/data/category.dart';
 import 'package:finance_manager_app/data/mydata.dart';
+import 'package:finance_manager_app/pages/all%20Expenses/detaildialog.dart';
 import 'package:finance_manager_app/providers/transaction_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -75,7 +76,7 @@ class _AllExpenseState extends State<AllExpense> {
     filteredTransactions = allTransactions.where((txn) {
       final txnDate = DateTime.parse(txn['date']); // Parses date string
       final matchesCategory =
-          selectedCategory == 'All' || txn['category'] == selectedCategory;
+          selectedCategory == null || selectedCategory == 'All' || txn['category'] == selectedCategory;
 
       final matchesDate = selectedDate == null ||
           (txnDate.year == selectedDate!.year &&
@@ -86,6 +87,18 @@ class _AllExpenseState extends State<AllExpense> {
     }).toList();
 
     setState(() {});
+  }
+  
+  void _showExpenseDetails(Map<String, dynamic> expense) {
+    showDialog(
+      context: context,
+      builder: (context) => ExpenseDetailDialog(expense: expense),
+    ).then((valueChanged) {
+      // If the dialog returns true, refresh the list to show updated data
+      if (valueChanged == true) {
+        fetchAllTransactions();
+      }
+    });
   }
 
   @override
@@ -121,7 +134,7 @@ class _AllExpenseState extends State<AllExpense> {
                               "Filter Category",
                               style: TextStyle(color: Colors.white70),
                             ),
-                            items: categoryList.map((cat) {
+                            items: ['All', ...categoryList].map((cat) {
                               return DropdownMenuItem(
                                 value: cat,
                                 child: Text(cat,
@@ -147,7 +160,7 @@ class _AllExpenseState extends State<AllExpense> {
                                   return Theme(
                                     data: Theme.of(context).copyWith(
                                       dialogBackgroundColor: const Color(
-                                          0xFF34394B), // 🎯 Custom background color
+                                          0xFF34394B), // Custom background color
                                       colorScheme: ColorScheme.dark(
                                         primary: Theme.of(context)
                                             .colorScheme
@@ -160,7 +173,7 @@ class _AllExpenseState extends State<AllExpense> {
                                       ),
                                       textButtonTheme: TextButtonThemeData(
                                         style: TextButton.styleFrom(
-                                          textStyle: TextStyle(
+                                          textStyle: const TextStyle(
                                               fontWeight: FontWeight.w800),
                                           foregroundColor: Theme.of(context)
                                               .colorScheme
@@ -188,6 +201,18 @@ class _AllExpenseState extends State<AllExpense> {
                               style: const TextStyle(color: Colors.white),
                             ),
                           ),
+                          if (selectedCategory != null || selectedDate != null)
+                            IconButton(
+                              icon: const Icon(Icons.clear, color: Colors.white70),
+                              onPressed: () {
+                                setState(() {
+                                  selectedCategory = null;
+                                  selectedDate = null;
+                                  filteredTransactions = allTransactions;
+                                });
+                              },
+                              tooltip: 'Clear filters',
+                            ),
                         ],
                       ),
                       const SizedBox(height: 10),
@@ -213,68 +238,72 @@ class _AllExpenseState extends State<AllExpense> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundColor: categoryDetails['color'],
-                                    radius: 25,
-                                    child: categoryDetails['icon'],
-                                  ),
-                                  title: Text(
-                                    expense['description'] ?? 'Expense',
-                                    style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
+                                child: InkWell(
+                                  onTap: () => _showExpenseDetails(expense),
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: ListTile(
+                                    leading: CircleAvatar(
+                                      backgroundColor: categoryDetails['color'],
+                                      radius: 25,
+                                      child: categoryDetails['icon'],
                                     ),
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            formatDate(expense['date']),
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Color.fromARGB(
-                                                  217, 223, 223, 223),
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            formatTime(expense['date']),
-                                            style: TextStyle(
-                                              color: Colors.blueGrey[300],
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ],
+                                    title: Text(
+                                      expense['description'] ?? 'Expense',
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      const SizedBox(height: 5),
-                                      Text(
-                                        expense['title'] ?? 'Expense',
-                                        style: TextStyle(
-                                          color: Colors.blueGrey[200],
-                                          fontSize: 13,
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              formatDate(expense['date']),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Color.fromARGB(
+                                                    217, 223, 223, 223),
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              formatTime(expense['date']),
+                                              style: TextStyle(
+                                                color: Colors.blueGrey[300],
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  trailing: Text(
-                                    "${expense['amount']}",
-                                    style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          expense['title'] ?? 'Expense',
+                                          style: TextStyle(
+                                            color: Colors.blueGrey[200],
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                    trailing: Text(
+                                      "${expense['amount']}",
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    isThreeLine: true,
                                   ),
-                                  isThreeLine: true,
                                 ),
                               );
                             },
