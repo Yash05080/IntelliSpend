@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TransactionService {
@@ -8,6 +10,53 @@ class TransactionService {
     if (userId == null) throw Exception('Not authenticated');
     return userId;
   }
+  /// Saves a single transaction to Supabase (transactions + balance).
+  Future<void> saveTransaction(Map<String, dynamic> txn) async {
+    final userId = await getCurrentUserId();
+    final DateTime date = DateTime.parse(txn['date'] as String);
+
+    await _client.rpc('start_transaction');
+
+    try {
+      // Insert into transactions
+      await _client.from('transactions').insert({
+        'user_id': userId,
+        'title': txn['title'],
+        'description': txn['description'],
+        'amount': txn['amount'],
+        'category': txn['category'],
+        'date': date.toIso8601String(),
+      });
+
+      // Insert into balance
+      await _client.from('balance').insert({
+        'user_id': userId,
+        'amount': txn['amount'],
+        'type': 'debit',
+        'created_at': date.toIso8601String(),
+      });
+
+      await _client.rpc('commit_transaction');
+    } catch (e) {
+      await _client.rpc('rollback_transaction');
+      rethrow;
+    }
+  }
+
+    /// Parses Gemini’s JSON, saves each txn, and returns the list of saved items.
+  Future<List<Map<String, dynamic>>> saveAllFromGemini(String jsonString) async {
+    final List<dynamic> parsed = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> saved = [];
+
+    for (final item in parsed) {
+      final Map<String, dynamic> txn = Map<String, dynamic>.from(item);
+      await saveTransaction(txn);
+      saved.add(txn);
+    }
+    return saved;
+  }
+
+
 
   Future<Map<String, double>> getExpenseByCategory(String userId) async {
     final response = await _client
