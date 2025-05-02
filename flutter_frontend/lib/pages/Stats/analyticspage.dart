@@ -32,7 +32,7 @@ class AnalyticsDashboardScreen extends StatefulWidget {
 
 class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
   final _analyticsService = AnalyticsService();
-  
+
   // Data variables
   List<WeekdayExpense> _weekdayExpenses = [];
   List<CategoryAverage> _catAvg = [];
@@ -42,17 +42,17 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
   List<CategoryCount> _catCnt = [];
   List<CategoryStats> _catStats = [];
   List<ForecastPoint> _forecast = [];
-  
+
   // Filter variables
   DateTime _startDate = DateTime.now().subtract(Duration(days: 90));
   DateTime _endDate = DateTime.now();
   List<String>? _selectedCategories;
   bool _isLoading = true;
-  
+
   // Theme colors
   final Color bgColor = HexColor("232842"); // light navy blue
   final Color textColor = HexColor("FFFFFF"); // white
-  final Color primaryColor = HexColor("F2C341"); // golden yellow  
+  final Color primaryColor = HexColor("F2C341"); // golden yellow
   final Color secondaryColor = HexColor("f1a410"); // orange
   final Color tertiaryColor = HexColor("f3696e"); // coral pink
   final Color outlineColor = HexColor("f1a410"); // orange
@@ -69,26 +69,31 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
     });
 
     try {
-      final weekdayExpenses = await _analyticsService.getSpendingByWeekdayFiltered(
-        userId: widget.userId, 
-        startDate: _startDate, 
-        endDate: _endDate,
-        categories: _selectedCategories
-      );
-      
+      final weekdayExpenses =
+          await _analyticsService.getSpendingByWeekdayFiltered(
+              userId: widget.userId,
+              startDate: _startDate,
+              endDate: _endDate,
+              categories: _selectedCategories);
+
       final catAvg = await _analyticsService.getAverageSpendPerCategoryFiltered(
-        userId: widget.userId,
-        startDate: _startDate,
-        endDate: _endDate,
-        categories: _selectedCategories
-      );
-      
-      final monthlyExpenses = await _analyticsService.getMonthlyExpenseTrend(widget.userId);
-      final movingAvgData = await _analyticsService.getMovingAverage(widget.userId);
-      final anoms = await _analyticsService.detectSpendingAnomalies(widget.userId);
-      final catCnt = await _analyticsService.getTransactionCountPerCategory(widget.userId);
-      final catStats = await _analyticsService.getCategoryMedianVariance(widget.userId);
-      final forecast = await _analyticsService.forecastMonthlyExpenses(widget.userId, nextMonths: 3);
+          userId: widget.userId,
+          startDate: _startDate,
+          endDate: _endDate,
+          categories: _selectedCategories);
+
+      final monthlyExpenses =
+          await _analyticsService.getMonthlyExpenseTrend(widget.userId);
+      final movingAvgData =
+          await _analyticsService.getMovingAverage(widget.userId);
+      final anoms =
+          await _analyticsService.detectSpendingAnomalies(widget.userId);
+      final catCnt =
+          await _analyticsService.getTransactionCountPerCategory(widget.userId);
+      final catStats =
+          await _analyticsService.getCategoryMedianVariance(widget.userId);
+      final forecast = await _analyticsService
+          .forecastMonthlyExpenses(widget.userId, nextMonths: 3);
 
       setState(() {
         _weekdayExpenses = weekdayExpenses;
@@ -126,7 +131,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
             children: [
               // Date range pickers would go here
               // Category multi-select would go here
-              Text("Date Range and Category filters", style: TextStyle(color: textColor)),
+              Text("Date Range and Category filters",
+                  style: TextStyle(color: textColor)),
             ],
           ),
           actions: [
@@ -186,22 +192,22 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                     // Header Summary Card
                     _buildSummaryCard(),
                     const SizedBox(height: 16),
-                    
+
                     // Primary Analysis Section
                     _buildSectionHeader("Expense Analysis"),
                     _buildWeekdayExpenseChart(),
                     const SizedBox(height: 24),
-                    
+
                     // Monthly Trend with Forecast
                     _buildSectionHeader("Weekly Trend"),
                     WeeklyExpenseChart(userId: uid),
                     const SizedBox(height: 24),
-                    
+
                     // Category Analysis
                     _buildSectionHeader("Category Analysis"),
                     _buildCategoryAnalysisSection(),
                     //const SizedBox(height: 14),
-                    
+
                     // Recent Activity & Insights
                     _buildSectionHeader("Insights & Anomalies"),
                     _buildInsightsSection(),
@@ -214,11 +220,12 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
   }
 
   Widget _buildSummaryCard() {
-    final totalSpend = _monthlyExpenses.isEmpty ? 0.0 : 
-        _monthlyExpenses.map((e) => e.total).reduce((a, b) => a + b);
-    final avgPerMonth = _monthlyExpenses.isEmpty ? 0.0 : 
-        totalSpend / _monthlyExpenses.length;
-    
+    final totalSpend = _monthlyExpenses.isEmpty
+        ? 0.0
+        : _monthlyExpenses.map((e) => e.total).reduce((a, b) => a + b);
+    final avgPerMonth =
+        _monthlyExpenses.isEmpty ? 0.0 : totalSpend / _monthlyExpenses.length;
+
     return Card(
       elevation: 4,
       color: bgColor,
@@ -323,7 +330,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
     final Map<String, double> weekdayMap = {
       for (var exp in _weekdayExpenses) exp.weekday: exp.total
     };
-    
+
     // Fill in any missing weekdays with 0
     final List<BarChartGroupData> barGroups = [];
     for (int i = 0; i < weekdayOrder.length; i++) {
@@ -334,7 +341,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
           barRods: [
             BarChartRodData(
               toY: weekdayMap[weekday] ?? 0,
-              color: weekday == "Sat" || weekday == "Sun" 
+              color: weekday == "Sat" || weekday == "Sun"
                   ? tertiaryColor
                   : primaryColor,
               width: 16,
@@ -369,17 +376,28 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
               child: BarChart(
                 BarChartData(
                   alignment: BarChartAlignment.center,
-                  maxY: barGroups.map((g) => g.barRods.first.toY).reduce(max) * 1.2,
+                  maxY: barGroups.map((g) => g.barRods.first.toY).reduce(max) *
+                      1.2,
                   titlesData: FlTitlesData(
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
                         getTitlesWidget: (value, meta) {
+                          // Format the number to show "k" for thousands
+                          String formattedValue;
+                          if (value >= 1000) {
+                            formattedValue =
+                                "₹${(value / 1000).toStringAsFixed(0)}k";
+                          } else {
+                            formattedValue = "₹${value.toInt()}";
+                          }
+
                           return Padding(
                             padding: const EdgeInsets.only(right: 8.0),
                             child: Text(
-                              "₹${value.toInt()}",
-                              style: TextStyle(color: outlineColor, fontSize: 10),
+                              formattedValue,
+                              style:
+                                  TextStyle(color: outlineColor, fontSize: 10),
                             ),
                           );
                         },
@@ -393,7 +411,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                           return Text(
                             weekdayOrder[value.toInt()],
                             style: TextStyle(
-                              color: textColor, 
+                              color: textColor,
                               fontWeight: FontWeight.bold,
                               fontSize: 10,
                             ),
@@ -431,15 +449,16 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
   Widget _buildMonthlyTrendChart() {
     // Combine actual data and forecast
     final allData = [..._monthlyExpenses, ..._forecast];
-    
+
     // Create line chart data
     final spots = _monthlyExpenses.asMap().entries.map((entry) {
       return FlSpot(entry.key.toDouble(), entry.value.total);
     }).toList();
-    
+
     // Create forecast spots
     final forecastSpots = _forecast.asMap().entries.map((entry) {
-      return FlSpot((_monthlyExpenses.length - 1 + entry.key + 1).toDouble(), entry.value.predicted);
+      return FlSpot((_monthlyExpenses.length - 1 + entry.key + 1).toDouble(),
+          entry.value.predicted);
     }).toList();
 
     return Card(
@@ -468,18 +487,19 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                   lineTouchData: LineTouchData(
                     touchTooltipData: LineTouchTooltipData(
                       getTooltipColor: (LineBarSpot touchedSpot) {
-        // Assuming 'bgColor' is a Color variable you have defined elsewhere
-        return bgColor.withOpacity(0.8);
-      },
+                        // Assuming 'bgColor' is a Color variable you have defined elsewhere
+                        return bgColor.withOpacity(0.8);
+                      },
                       getTooltipItems: (touchedSpots) {
                         return touchedSpots.map((touchedSpot) {
                           final index = touchedSpot.x.toInt();
                           final isForecast = index >= _monthlyExpenses.length;
-                          final month = isForecast 
-                              ? _forecast[index - _monthlyExpenses.length].period
+                          final month = isForecast
+                              ? _forecast[index - _monthlyExpenses.length]
+                                  .period
                               : _monthlyExpenses[index].month;
                           final value = touchedSpot.y;
-                          
+
                           return LineTooltipItem(
                             '$month: ₹${value.toStringAsFixed(0)}',
                             TextStyle(
@@ -506,14 +526,18 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                         showTitles: true,
                         getTitlesWidget: (value, meta) {
                           if (value.toInt() % 3 != 0) return const SizedBox();
-                          
+
                           final index = value.toInt();
                           if (index >= allData.length) return const SizedBox();
-                          
+
                           final month = index < _monthlyExpenses.length
-                              ? _monthlyExpenses[index].month.substring(5) // Just show MM
-                              : _forecast[index - _monthlyExpenses.length].period.substring(5);
-                          
+                              ? _monthlyExpenses[index]
+                                  .month
+                                  .substring(5) // Just show MM
+                              : _forecast[index - _monthlyExpenses.length]
+                                  .period
+                                  .substring(5);
+
                           return Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
@@ -536,7 +560,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                             padding: const EdgeInsets.only(right: 8.0),
                             child: Text(
                               "₹${value.toInt()}",
-                              style: TextStyle(color: outlineColor, fontSize: 10),
+                              style:
+                                  TextStyle(color: outlineColor, fontSize: 10),
                             ),
                           );
                         },
@@ -601,171 +626,172 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
       ),
     );
   }
+
   void _showAllCategoryAverages(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) => Dialog(
-      backgroundColor: HexColor("191d2d"),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        padding: EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "All Category Averages",
-                  style: TextStyle(
-                    color: HexColor("FFFFFF"),
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: HexColor("191d2d"),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "All Category Averages",
+                    style: TextStyle(
+                      color: HexColor("FFFFFF"),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.close, color: HexColor("FFFFFF")),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ),
-            Divider(height: 16, color: HexColor("f1a410").withOpacity(0.3)),
-            Container(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.6,
+                  IconButton(
+                    icon: Icon(Icons.close, color: HexColor("FFFFFF")),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
               ),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _catAvg.length,
-                itemBuilder: (context, index) {
-                  final cat = _catAvg[index];
-                  return _buildCategoryListItem(
-                    cat.category,
-                    "₹${cat.average.toStringAsFixed(0)}",
-                    index,
-                  );
-                },
+              Divider(height: 16, color: HexColor("f1a410").withOpacity(0.3)),
+              Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.6,
+                ),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _catAvg.length,
+                  itemBuilder: (context, index) {
+                    final cat = _catAvg[index];
+                    return _buildCategoryListItem(
+                      cat.category,
+                      "₹${cat.average.toStringAsFixed(0)}",
+                      index,
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-void _showAllTransactionCounts(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) => Dialog(
-      backgroundColor: HexColor("191d2d"),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        padding: EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "All Transaction Counts",
-                  style: TextStyle(
-                    color: HexColor("FFFFFF"),
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+  void _showAllTransactionCounts(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: HexColor("191d2d"),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "All Transaction Counts",
+                    style: TextStyle(
+                      color: HexColor("FFFFFF"),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.close, color: HexColor("FFFFFF")),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ),
-            Divider(height: 16, color: HexColor("f1a410").withOpacity(0.3)),
-            Container(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.6,
+                  IconButton(
+                    icon: Icon(Icons.close, color: HexColor("FFFFFF")),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
               ),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _catCnt.length,
-                itemBuilder: (context, index) {
-                  final cat = _catCnt[index];
-                  return _buildCategoryListItem(
-                    cat.category,
-                    "${cat.count}",
-                    index,
-                  );
-                },
+              Divider(height: 16, color: HexColor("f1a410").withOpacity(0.3)),
+              Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.6,
+                ),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _catCnt.length,
+                  itemBuilder: (context, index) {
+                    final cat = _catCnt[index];
+                    return _buildCategoryListItem(
+                      cat.category,
+                      "${cat.count}",
+                      index,
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-void _showAllCategoryStats(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) => Dialog(
-      backgroundColor: HexColor("191d2d"),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        padding: EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "All Median & Variance",
-                  style: TextStyle(
-                    color: HexColor("FFFFFF"),
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+  void _showAllCategoryStats(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: HexColor("191d2d"),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "All Median & Variance",
+                    style: TextStyle(
+                      color: HexColor("FFFFFF"),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.close, color: HexColor("FFFFFF")),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ),
-            Divider(height: 16, color: HexColor("f1a410").withOpacity(0.3)),
-            Container(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.6,
+                  IconButton(
+                    icon: Icon(Icons.close, color: HexColor("FFFFFF")),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
               ),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _catStats.length,
-                itemBuilder: (context, index) {
-                  final stat = _catStats[index];
-                  return _buildCategoryStatsItem(
-                    stat.category,
-                    stat.median,
-                    stat.variance,
-                    index,
-                  );
-                },
+              Divider(height: 16, color: HexColor("f1a410").withOpacity(0.3)),
+              Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.6,
+                ),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _catStats.length,
+                  itemBuilder: (context, index) {
+                    final stat = _catStats[index];
+                    return _buildCategoryStatsItem(
+                      stat.category,
+                      stat.median,
+                      stat.variance,
+                      index,
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildLegendItem(Color color, String label, {bool isDashed = false}) {
     return Row(
@@ -803,136 +829,138 @@ void _showAllCategoryStats(BuildContext context) {
     );
   }
 
- Widget _buildCategoryAnalysisSection() {
-  return SingleChildScrollView(
-    scrollDirection: Axis.horizontal,
-    physics: BouncingScrollPhysics(),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Card 1: Category Averages
-        _buildCategoryCard(
-          "Avg. Spend per Category",
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: min(5, _catAvg.length),
-            itemBuilder: (context, index) {
-              final cat = _catAvg[index];
-              return _buildCategoryListItem(
-                cat.category,
-                "₹${cat.average.toStringAsFixed(0)}",
-                index,
-              );
-            },
+  Widget _buildCategoryAnalysisSection() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: BouncingScrollPhysics(),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Card 1: Category Averages
+          _buildCategoryCard(
+            "Avg. Spend per Category",
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: min(5, _catAvg.length),
+              itemBuilder: (context, index) {
+                final cat = _catAvg[index];
+                return _buildCategoryListItem(
+                  cat.category,
+                  "₹${cat.average.toStringAsFixed(0)}",
+                  index,
+                );
+              },
+            ),
+            width: 250,
+            onViewAllPressed: () => _showAllCategoryAverages(context),
           ),
-          width: 250,
-          onViewAllPressed: () => _showAllCategoryAverages(context),
-        ),
-        
-        const SizedBox(width: 16),
-        
-        // Card 2: Transaction Counts
-        _buildCategoryCard(
-          "Transaction Count",
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: min(5, _catCnt.length),
-            itemBuilder: (context, index) {
-              final cat = _catCnt[index];
-              return _buildCategoryListItem(
-                cat.category,
-                "${cat.count}",
-                index,
-              );
-            },
-          ),
-          width: 250,
-          onViewAllPressed: () => _showAllTransactionCounts(context),
-        ),
-        
-        const SizedBox(width: 16),
-        
-        // Card 3: Category Stats
-        _buildCategoryCard(
-          "Median & Variance",
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: min(5, _catStats.length),
-            itemBuilder: (context, index) {
-              final stat = _catStats[index];
-              return _buildCategoryStatsItem(
-                stat.category,
-                stat.median,
-                stat.variance,
-                index,
-              );
-            },
-          ),
-          width: 280,
-          onViewAllPressed: () => _showAllCategoryStats(context),
-        ),
-      ],
-    ),
-  );
-}
 
-  Widget _buildCategoryCard(String title, Widget content, {
-  required double width,
-  required Function onViewAllPressed,
-}) {
-  return Container(
-    width: width,
-    decoration: BoxDecoration(
-      color: bgColor,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.2),
-          blurRadius: 5,
-          offset: Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            title,
-            style: TextStyle(
-              color: textColor,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+          const SizedBox(width: 16),
+
+          // Card 2: Transaction Counts
+          _buildCategoryCard(
+            "Transaction Count",
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: min(5, _catCnt.length),
+              itemBuilder: (context, index) {
+                final cat = _catCnt[index];
+                return _buildCategoryListItem(
+                  cat.category,
+                  "${cat.count}",
+                  index,
+                );
+              },
+            ),
+            width: 250,
+            onViewAllPressed: () => _showAllTransactionCounts(context),
+          ),
+
+          const SizedBox(width: 16),
+
+          // Card 3: Category Stats
+          _buildCategoryCard(
+            "Median & Variance",
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: min(5, _catStats.length),
+              itemBuilder: (context, index) {
+                final stat = _catStats[index];
+                return _buildCategoryStatsItem(
+                  stat.category,
+                  stat.median,
+                  stat.variance,
+                  index,
+                );
+              },
+            ),
+            width: 280,
+            onViewAllPressed: () => _showAllCategoryStats(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryCard(
+    String title,
+    Widget content, {
+    required double width,
+    required Function onViewAllPressed,
+  }) {
+    return Container(
+      width: width,
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 5,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              title,
+              style: TextStyle(
+                color: textColor,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-        ),
-        Divider(height: 1, color: outlineColor.withOpacity(0.2)),
-        content,
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
-              onTap: () => onViewAllPressed(),
-              child: Text(
-                "View All",
-                style: TextStyle(
-                  color: primaryColor,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
+          Divider(height: 1, color: outlineColor.withOpacity(0.2)),
+          content,
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                onTap: () => onViewAllPressed(),
+                child: Text(
+                  "View All",
+                  style: TextStyle(
+                    color: primaryColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 
   Widget _buildCategoryListItem(String name, String value, int index) {
     return Container(
@@ -994,7 +1022,8 @@ void _showAllCategoryStats(BuildContext context) {
     );
   }
 
-  Widget _buildCategoryStatsItem(String name, double median, double variance, int index) {
+  Widget _buildCategoryStatsItem(
+      String name, double median, double variance, int index) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -1073,7 +1102,8 @@ void _showAllCategoryStats(BuildContext context) {
         Card(
           color: bgColor,
           elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -1081,7 +1111,8 @@ void _showAllCategoryStats(BuildContext context) {
               children: [
                 Text(
                   "7-Day Moving Average",
-                  style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+                  style:
+                      TextStyle(color: textColor, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -1094,15 +1125,16 @@ void _showAllCategoryStats(BuildContext context) {
             ),
           ),
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Anomalies Section
         if (_anoms.isNotEmpty)
           Card(
             color: bgColor,
             elevation: 4,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -1114,7 +1146,8 @@ void _showAllCategoryStats(BuildContext context) {
                       const SizedBox(width: 8),
                       Text(
                         "Spending Anomalies",
-                        style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: textColor, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -1166,14 +1199,12 @@ void _showAllCategoryStats(BuildContext context) {
     }).toList();
 
     // Find min and max values for better scaling
-    final minY = _movingAvgData
-            .map((d) => d.total)
-            .reduce((a, b) => a < b ? a : b) *
-        0.9;
-    final maxY = _movingAvgData
-            .map((d) => d.total)
-            .reduce((a, b) => a > b ? a : b) *
-        1.1;
+    final minY =
+        _movingAvgData.map((d) => d.total).reduce((a, b) => a < b ? a : b) *
+            0.9;
+    final maxY =
+        _movingAvgData.map((d) => d.total).reduce((a, b) => a > b ? a : b) *
+            1.1;
 
     return SizedBox(
       height: 180,
@@ -1182,15 +1213,15 @@ void _showAllCategoryStats(BuildContext context) {
           lineTouchData: LineTouchData(
             touchTooltipData: LineTouchTooltipData(
               getTooltipColor: (LineBarSpot touchedSpot) {
-        // Assuming 'bgColor' is a Color variable you have defined elsewhere
-        return bgColor.withOpacity(0.8);
-      },
+                // Assuming 'bgColor' is a Color variable you have defined elsewhere
+                return bgColor.withOpacity(0.8);
+              },
               getTooltipItems: (touchedSpots) {
                 return touchedSpots.map((touchedSpot) {
                   final index = touchedSpot.x.toInt();
                   if (index >= 0 && index < _movingAvgData.length) {
-                    final date = DateFormat('MMM d')
-                        .format(_movingAvgData[index].date);
+                    final date =
+                        DateFormat('MMM d').format(_movingAvgData[index].date);
                     return LineTooltipItem(
                       '$date: ₹${touchedSpot.y.toStringAsFixed(0)}',
                       TextStyle(
@@ -1228,8 +1259,7 @@ void _showAllCategoryStats(BuildContext context) {
                     return Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
-                        DateFormat('MM/dd')
-                            .format(_movingAvgData[index].date),
+                        DateFormat('MM/dd').format(_movingAvgData[index].date),
                         style: TextStyle(
                           color: textColor,
                           fontSize: 10,
@@ -1352,7 +1382,7 @@ void _showAllCategoryStats(BuildContext context) {
 // Create a custom floating action button for quick insights
 class InsightsFAB extends StatelessWidget {
   final VoidCallback onPressed;
-  
+
   const InsightsFAB({Key? key, required this.onPressed}) : super(key: key);
 
   @override
@@ -1375,28 +1405,29 @@ class InsightsFAB extends StatelessWidget {
 // Create a complete analytics home page
 class AnalyticsHomePage extends StatefulWidget {
   final String userId;
-  
+
   const AnalyticsHomePage({Key? key, required this.userId}) : super(key: key);
 
   @override
   _AnalyticsHomePageState createState() => _AnalyticsHomePageState();
 }
 
-class _AnalyticsHomePageState extends State<AnalyticsHomePage> with SingleTickerProviderStateMixin {
+class _AnalyticsHomePageState extends State<AnalyticsHomePage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
   }
-  
+
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
   }
-  
+
   void _showQuickInsights() {
     // Show bottom sheet with key insights
     showModalBottomSheet(
@@ -1408,7 +1439,7 @@ class _AnalyticsHomePageState extends State<AnalyticsHomePage> with SingleTicker
       builder: (context) => _buildQuickInsightsSheet(),
     );
   }
-  
+
   Widget _buildQuickInsightsSheet() {
     return Padding(
       padding: const EdgeInsets.all(24.0),
@@ -1466,7 +1497,7 @@ class _AnalyticsHomePageState extends State<AnalyticsHomePage> with SingleTicker
       ),
     );
   }
-  
+
   Widget _buildInsightTile({
     required IconData icon,
     required Color color,
@@ -1512,7 +1543,7 @@ class _AnalyticsHomePageState extends State<AnalyticsHomePage> with SingleTicker
       ),
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1558,7 +1589,7 @@ class _AnalyticsHomePageState extends State<AnalyticsHomePage> with SingleTicker
         children: [
           // Overview Tab
           AnalyticsDashboardScreen(userId: widget.userId),
-          
+
           // Categories Tab (a placeholder for now)
           Center(
             child: Text(
@@ -1566,7 +1597,7 @@ class _AnalyticsHomePageState extends State<AnalyticsHomePage> with SingleTicker
               style: TextStyle(color: HexColor("FFFFFF")),
             ),
           ),
-          
+
           // Insights Tab (a placeholder for now)
           Center(
             child: Text(
@@ -1623,9 +1654,9 @@ class CategoryAnalysisView extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Category tabs
             DefaultTabController(
               length: 3,
@@ -1651,9 +1682,7 @@ class CategoryAnalysisView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  
                   const SizedBox(height: 16),
-                  
                   SizedBox(
                     height: 300,
                     child: TabBarView(
@@ -1670,7 +1699,7 @@ class CategoryAnalysisView extends StatelessWidget {
                             );
                           },
                         ),
-                        
+
                         // Count Tab
                         ListView.builder(
                           itemCount: categoryCounts.length,
@@ -1683,7 +1712,7 @@ class CategoryAnalysisView extends StatelessWidget {
                             );
                           },
                         ),
-                        
+
                         // Stats Tab
                         ListView.builder(
                           itemCount: categoryStats.length,
@@ -1692,7 +1721,8 @@ class CategoryAnalysisView extends StatelessWidget {
                             return _buildEnhancedListTile(
                               title: stat.category,
                               value: "₹${stat.median.toStringAsFixed(2)}",
-                              subtitle: "Var: ${stat.variance.toStringAsFixed(2)}",
+                              subtitle:
+                                  "Var: ${stat.variance.toStringAsFixed(2)}",
                               index: index,
                             );
                           },
@@ -1708,7 +1738,7 @@ class CategoryAnalysisView extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildEnhancedListTile({
     required String title,
     required String value,
@@ -1782,31 +1812,28 @@ class CategoryDistributionChart extends StatelessWidget {
   final List<CategoryAverage> categories;
   final Color bgColor;
   final Color textColor;
-  
+
   const CategoryDistributionChart({
     Key? key,
     required this.categories,
     required this.bgColor,
     required this.textColor,
   }) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     // Use only top 5 categories for the chart
     final topCategories = categories.take(5).toList();
-    
+
     // Calculate the total for percentage
-    final total = topCategories.fold(
-      0.0, 
-      (sum, item) => sum + item.average
-    );
-    
+    final total = topCategories.fold(0.0, (sum, item) => sum + item.average);
+
     // Generate pie sections
     final sections = topCategories.asMap().entries.map((entry) {
       final index = entry.key;
       final item = entry.value;
       final percent = item.average / total;
-      
+
       // Colors for the pie sections
       final colors = [
         HexColor("F2C341"), // primary
@@ -1815,7 +1842,7 @@ class CategoryDistributionChart extends StatelessWidget {
         HexColor("F2C341").withOpacity(0.7),
         HexColor("f1a410").withOpacity(0.7),
       ];
-      
+
       return PieChartSectionData(
         color: colors[index % colors.length],
         value: item.average,
@@ -1828,7 +1855,7 @@ class CategoryDistributionChart extends StatelessWidget {
         ),
       );
     }).toList();
-    
+
     return Card(
       color: bgColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -1863,7 +1890,7 @@ class CategoryDistributionChart extends StatelessWidget {
                 final index = entry.key;
                 final item = entry.value;
                 final percent = item.average / total;
-                
+
                 // Colors matching the pie chart
                 final colors = [
                   HexColor("F2C341"), // primary
@@ -1872,7 +1899,7 @@ class CategoryDistributionChart extends StatelessWidget {
                   HexColor("F2C341").withOpacity(0.7),
                   HexColor("f1a410").withOpacity(0.7),
                 ];
-                
+
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Row(

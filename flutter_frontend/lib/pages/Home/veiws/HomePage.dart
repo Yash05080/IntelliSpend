@@ -111,8 +111,41 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               ],
             ),
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: FloatingActionButton(
+  onPressed: _toggleExpand,
+  elevation: 10,
+  focusElevation: 0,
+  shape: const CircleBorder(),
+  child: Container(
+    height: 100,
+    width: 100,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      gradient: LinearGradient(
+        colors: [
+          Theme.of(context).colorScheme.primary,
+          Theme.of(context).colorScheme.secondary,
+          Theme.of(context).colorScheme.tertiary,
+        ],
+        transform: const GradientRotation(pi / 4),
+      ),
+    ),
+    child: AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        return Transform.rotate(
+          angle: _animationController.value * pi / 4,
+          child: Icon(
+            _isExpanded ? Icons.close : Icons.add,
+            size: 32,
+          ),
+        );
+      },
+    ),
+  ),
+),
+floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
           backgroundColor: HexColor("191d2d"),
           body: index == 0 ? const MainScreen() : const StatsPage(),
         ),
@@ -138,131 +171,73 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         ),
 
         // Main FAB and expanded buttons
-        Positioned(
-          bottom: 16,
-          left: MediaQuery.of(context).size.width / 2 - 28,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Camera button
-              ScaleTransition(
-                scale: _expandAnimation,
-                child: _isExpanded
-                    ? Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: FloatingActionButton(
-                          heroTag: "camera",
-                          onPressed: () {
-                            // Camera functionality here
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => OCRCapturePage()));
-                            _toggleExpand();
-                          },
-                          backgroundColor:
-                              Theme.of(context).colorScheme.tertiary,
-                          child: const Icon(
-                            Icons.camera_alt,
-                            size: 28,
-                          ),
-                        ),
-                      )
-                    : const SizedBox(),
-              ),
-
-              // Note/List button
-              ScaleTransition(
-                scale: _expandAnimation,
-                child: _isExpanded
-                    ? Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: FloatingActionButton(
-                          heroTag: "note",
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const AddExpense()));
-                            _toggleExpand();
-                          },
-                          backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
-                          child: const Icon(
-                            Icons.note_alt,
-                            size: 28,
-                          ),
-                        ),
-                      )
-                    : const SizedBox(),
-              ),
-
-              // Document button
-              ScaleTransition(
-                scale: _expandAnimation,
-                child: _isExpanded
-                    ? Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: FloatingActionButton(
-                          heroTag: "document",
-                          onPressed: () {
-                            // Document functionality here
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>  DocumentPickerPage()));
-
-                            _toggleExpand();
-                          },
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          child: const Icon(
-                            Icons.description,
-                            size: 28,
-                          ),
-                        ),
-                      )
-                    : const SizedBox(),
-              ),
-
-              // Main FAB
-              FloatingActionButton(
-                onPressed: _toggleExpand,
-                elevation: 10,
-                focusElevation: 0,
-                shape: const CircleBorder(),
-                child: Container(
-                  height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      colors: [
-                        Theme.of(context).colorScheme.primary,
-                        Theme.of(context).colorScheme.secondary,
-                        Theme.of(context).colorScheme.tertiary,
-                      ],
-                      transform: const GradientRotation(pi / 4),
-                    ),
-                  ),
-                  child: AnimatedBuilder(
-                    animation: _animationController,
-                    builder: (context, child) {
-                      return Transform.rotate(
-                        angle: _animationController.value * pi / 4,
-                        child: Icon(
-                          _isExpanded ? Icons.close : Icons.add,
-                          size: 32,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
+        if (_isExpanded)
+  Positioned(
+    bottom: 100, // Just above BottomNavigationBar + main FAB
+    left: MediaQuery.of(context).size.width / 2 - 28,
+    child: Column(
+      children: [
+        // Camera
+        ScaleTransition(
+          scale: _expandAnimation,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: FloatingActionButton(
+              heroTag: "camera",
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => OCRCapturePage()));
+                _toggleExpand();
+              },
+              backgroundColor: Theme.of(context).colorScheme.tertiary,
+              child: const Icon(Icons.camera_alt, size: 28),
+            ),
           ),
-        )
+        ),
+
+        // Note
+        ScaleTransition(
+          scale: _expandAnimation,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: FloatingActionButton(
+              heroTag: "note",
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const AddExpense()));
+                _toggleExpand();
+              },
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              child: const Icon(Icons.note_alt, size: 28),
+            ),
+          ),
+        ),
+
+        // Document
+        ScaleTransition(
+          scale: _expandAnimation,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 56.0),
+            child: FloatingActionButton(
+              heroTag: "document",
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DocumentPickerPage()));
+                _toggleExpand();
+              },
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              child: const Icon(Icons.description, size: 28),
+            ),
+          ),
+        ),
+      ],
+    ),
+  ),
+
       ],
     );
   }
